@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KARTHIK PALANI-CHENNAI</title>
+
+  <!-- 
+    - favicon
+  -->
+  <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
+
+  <!-- 
+    - custom css link
+  -->
+  <link rel="stylesheet" href="./assets/css/style.css">
+  
+  <!-- 
+    - google font link
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Barlow:wght@600;700&family=Open+Sans:wght@400;500;700&family=Poppins:wght@400;600&display=swap"
+    rel="stylesheet">
+</head>
+<link rel="stylesheet" href="./assets/css/style.css">
+<style>
+.portfolio .section-title { margin-block-end: 18px; }
+
+.portfolio .section-text { margin-block-end: 80px; }
+
+.portfolio-list {
+  display: grid;
+  gap: 60px;
+}
+
+.portfolio-card {
+  background-color: var(--independence);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  width: 300px; /* Set the desired width */
+  height: 300px; /* Set the same value as width to make it square */
+  padding: 50px;
+  border-radius: var(--radius-20);
+  font-family: var(--ff-barlow);
+  color: var(--white);
+  font-weight: var(--fw-600);
+  transition: var(--transition-2);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Distribute content evenly */
+  position: relative; /* Add position relative */
+}
+
+.portfolio-list > li:nth-child(even) .card-content { margin-inline-start: auto; }
+
+.portfolio-card .card-subtitle {
+  color: var(--orange-soda);
+  margin-block-end: 5px;
+}
+
+.portfolio-card .card-title {
+  max-width: 20ch;
+  margin: 0; /* Remove the margin-block-end to position it at the top corner */
+  font-size: var(--fs-5); /* Adjust the font size as needed */
+}
+
+.portfolio-card .btn-link {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--fs-5); /* Set the same font size as card-title */
+  text-transform: uppercase;
+}
+
+.portfolio-card .btn-link ion-icon {
+  color: var(--orange-soda);
+  font-size: 1.6rem;
+}
+
+.portfolio-list.horizontal {
+  display: flex;
+  gap: 60px;
+}
+</style>
+<title>KARTHIK PALANI-CHENNAI</title>
+<section class="section portfolio" id="portfolio">
+    <div class="container">
+        <p class="section-subtitle">Portfolio</p>
+
+          <h2 class="h2 section-title">My Amazing Works</h2>
+
+          <p class="section-text">
+            Able to effectively self-manage during independent projects, as well as collaborate in a team setting.
+          </p>
+      <ul class="portfolio-list horizontal">
+        <li>
+          <a href="project5.html" class="portfolio-card" style="background-image: url('./assets/images/pro5.png')">
+            <div class="card-content">
+              <h3 class="h3 card-title">Rancher and Longhorn in EKS cluster</h3>
+              <span class="btn-link">
+              </span>
+            </div>
+          </a>
+        </li>
+
+        <li>
+          <a href="project6.html" class="portfolio-card" style="background-image: url('./assets/images/pro6.jpg')">
+            <div class="card-content">
+              <h3 class="h3 card-title">On-Premise S3 storage(minio)</h3>
+              <span class="btn-link">
+              </span>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+</section>

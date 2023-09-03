@@ -1,0 +1,11 @@
+pages:
+  stage: deploy
+  script:
+    - mkdir .public
+    - cp -r * .public
+    - mv .public public
+  artifacts:
+    paths:
+      - public
+  only:
+    - <branch_name> # Replace with the branch you want to deploy from

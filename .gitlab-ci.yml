@@ -1,14 +1,16 @@
-stages:
-  - build
+default:
+  image: docker:24.0.5
+  services:
+    - docker:24.0.5-dind
+  before_script:
+    - docker info
 
 variables:
+  DOCKER_TLS_CERTDIR: "/certs"
   DOCKER_IMAGE_TAG: $CI_COMMIT_REF_NAME
 
 build:
   stage: build
-  image: quay.io/buildah/stable:v1.23.3
-  before_script:
-    - buildah version
   script:
-    - buildah build --platform linux/amd64,linux/arm64 -t $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG .
-    - buildah push $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG
+    - docker build -t $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG .
+    - docker push $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG

@@ -8,9 +8,12 @@ default:
 variables:
   DOCKER_TLS_CERTDIR: "/certs"
   DOCKER_IMAGE_TAG: $CI_COMMIT_REF_NAME
+  DOCKER_HOST: tcp://docker:2376
+  DOCKER_TLS_VERIFY: 1
+  DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
 
 build:
   stage: build
   script:
-    - docker build -t $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG .
+    - docker buildx --platform linux/arm64,linux/amd64 -t $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG .
     - docker push $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG

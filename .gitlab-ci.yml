@@ -3,7 +3,8 @@ default:
   services:
     - docker:24.0.5-dind
   before_script:
-    - docker info
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+
 
 variables:
   DOCKER_TLS_CERTDIR: "/certs"
@@ -15,5 +16,9 @@ variables:
 build:
   stage: build
   script:
-    - docker buildx build --platform linux/arm64,linux/amd64 -t $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG .
-    - docker push $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG
+    - docker info
+    - docker context create builder-context
+    - docker buildx create --name builderx --driver docker-container --use builder-context
+    - docker buildx build -t $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG --push --platform=linux/arm64,linux/amd64 . 
+    # - docker buildx build --platform linux/arm64,linux/amd64 -t $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG .
+    # - docker push $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG

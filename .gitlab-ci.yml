@@ -15,5 +15,5 @@ variables:
 build:
   stage: build
   script:
-    - docker buildx --platform linux/arm64,linux/amd64 -t $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG .
+    - docker buildx build --platform linux/arm64,linux/amd64 -t $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG .
     - docker push $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG

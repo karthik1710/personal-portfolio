@@ -7,9 +7,5 @@ variables:
 build:
   stage: build
   script:
-    - docker buildx --platform linux/amd64,linux/arm64 -t $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG .
+    - docker build --platform linux/amd64,linux/arm64 -t $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG .
     - docker push $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG
-  only:
-    - main 
-  tags:
-    - docker # Adjust this to specify the branch you want to trigger the pipeline

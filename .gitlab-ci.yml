@@ -6,6 +6,9 @@ variables:
 
 build:
   stage: build
+  image: quay.io/buildah/stable:v1.23.3
+  before_script:
+    - buildah version
   script:
-    - docker build --platform linux/amd64,linux/arm64 -t $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG .
-    - docker push $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG
+    - buildah build--platform linux/amd64,linux/arm64 -t $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG .
+    - buildah push $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG

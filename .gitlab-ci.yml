@@ -17,7 +17,5 @@ build:
   stage: build
   script:
     - docker info
-    - docker context create builder-context
-    - docker buildx create --name builderx --driver docker-container --use builder-context
-    - docker buildx build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA --platform=linux/arm64,linux/amd64 . 
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA . 
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA

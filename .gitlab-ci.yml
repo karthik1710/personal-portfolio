@@ -1,11 +1,15 @@
-pages:
-  stage: deploy
+stages:
+  - build
+
+variables:
+  DOCKER_IMAGE_TAG: $CI_COMMIT_REF_NAME
+
+build:
+  stage: build
   script:
-    - mkdir .public
-    - cp -r * .public
-    - mv .public public
-  artifacts:
-    paths:
-      - public
+    - docker build -t $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG .
+    - docker push $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG
   only:
-    - main # Replace with the branch you want to deploy from
+    - main  # Adjust this to specify the branch you want to trigger the pipeline
+  tags:
+    - arm64

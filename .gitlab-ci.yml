@@ -24,6 +24,7 @@ deploy:
   stage: deploy
   image: ubuntu:latest
   before_script:
+    - apt-get update -qq
     - 'which ssh-agent || ( apt-get install -qq openssh-client )'
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$SSH_PRIVATE_KEY")

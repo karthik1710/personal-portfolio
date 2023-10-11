@@ -1,21 +1,33 @@
-default:
+stages:
+  - build
+  - deploy
+
+build:
   image: docker:24.0.5
   services:
     - docker:24.0.5-dind
+  stage: build
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_IMAGE_TAG: $CI_COMMIT_REF_NAME
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_TLS_VERIFY: 1
+    DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
   before_script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-
-
-variables:
-  DOCKER_TLS_CERTDIR: "/certs"
-  DOCKER_IMAGE_TAG: $CI_COMMIT_REF_NAME
-  DOCKER_HOST: tcp://docker:2376
-  DOCKER_TLS_VERIFY: 1
-  DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
-
-build:
-  stage: build
   script:
     - docker info
     - docker build --platform linux/arm64 -t $CI_REGISTRY_IMAGE:latest . 
     - docker push $CI_REGISTRY_IMAGE:latest
+
+deploy:
+  stage: deploy
+  image: ubuntu:latest
+  before_script:
+    - 'which ssh-agent || ( apt-get install -qq openssh-client )'
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+  script:
+    - ssh karthik@122.165.73.157 "sudo docker pull $CI_REGISTRY_IMAGE:latest && sudo docker restart karthik-portfolio && exit"

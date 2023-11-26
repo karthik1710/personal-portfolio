@@ -14,7 +14,7 @@ build:
     DOCKER_TLS_VERIFY: 1
     DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
   before_script:
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker info
     - docker build --platform linux/arm64 -t $CI_REGISTRY_IMAGE:latest . 
@@ -31,4 +31,4 @@ deploy:
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
   script:
-    - ssh admin@panel.karthiksys.in "sudo docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY & sudo docker pull $CI_REGISTRY_IMAGE:latest && sudo docker stop karthik-portfolio && sudo docker rm karthik-portfolio && sudo docker run -d --name karthik-portfolio -p 4017:80 $CI_REGISTRY_IMAGE:latest && exit"
+    - ssh admin@panel.karthiksys.in "docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY & docker pull $CI_REGISTRY_IMAGE:latest && docker stop karthik-portfolio && docker rm karthik-portfolio && docker run -d --name karthik-portfolio -p 4017:80 $CI_REGISTRY_IMAGE:latest && exit"

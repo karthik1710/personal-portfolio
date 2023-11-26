@@ -31,4 +31,4 @@ deploy:
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
   script:
-    - ssh karthik@122.165.73.157 "sudo docker pull $CI_REGISTRY_IMAGE:latest && sudo docker compose -f karthik-portfolio.yml down && sudo docker compose -f karthik-portfolio.yml up -d && exit"
+    - ssh admin@panel.karthiksys.in "sudo docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY & sudo docker pull $CI_REGISTRY_IMAGE:latest && sudo docker stop karthik-portfolio && sudo docker rm karthik-portfolio && sudo docker run -d --name karthik-portfolio -p 4017:80 $CI_REGISTRY_IMAGE:latest && exit"

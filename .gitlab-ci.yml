@@ -31,4 +31,4 @@ deploy:
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
   script:
-    - ssh admin@panel.karthiksys.in "docker login -u portfolio-deploy-token -p sWx97JzGvA6p5G1uJRck $CI_REGISTRY && docker pull $CI_REGISTRY_IMAGE:latest && docker stop karthik-portfolio && docker rm karthik-portfolio && docker run -d --name karthik-portfolio -p 4017:80 $CI_REGISTRY_IMAGE:latest  --restart always && exit"
+    - ssh admin@panel.karthiksys.in "docker login -u portfolio-deploy-token -p sWx97JzGvA6p5G1uJRck $CI_REGISTRY && docker pull $CI_REGISTRY_IMAGE:latest && docker stop karthik-portfolio && docker rm karthik-portfolio && docker run -d --restart always --name karthik-portfolio -p 4017:80 $CI_REGISTRY_IMAGE:latest && exit"

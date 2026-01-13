@@ -1,32 +1,18 @@
-<div align="center">
-  
-  ![GitHub repo size](https://img.shields.io/github/repo-size/codewithsadee/portfolio)
-  ![GitHub stars](https://img.shields.io/github/stars/codewithsadee/portfolio?style=social)
-  ![GitHub forks](https://img.shields.io/github/forks/codewithsadee/portfolio?style=social)
-  [![Twitter Follow](https://img.shields.io/twitter/follow/codewithsadee?style=social)](https://twitter.com/intent/follow?screen_name=codewithsadee)
-  [![YouTube Video Views](https://img.shields.io/youtube/views/SAu7e09vXoQ?style=social)](https://youtu.be/SAu7e09vXoQ)
 
-  <br />
-  <br />
+# Personal Portfolio
 
-  <h2 align="center">Personal Portfolio Website</h2>
+This is my personal portfolio website, built to showcase my experience as a Senior DevOps Engineer.
 
-  Fully responsive personal portfolio website, <br />Responsive for all devices, built using HTML, CSS, and JavaScript.
+- Modern, responsive design
+- Built with React and Tailwind CSS
+- Features DevOps, cloud, CI/CD, embedded systems, and test automation (pytest)
+- Interactive antigravity effects and developer-themed background
 
-  <a href="https://codewithsadee.github.io/portfolio/"><strong>➥ Live Demo</strong></a>
+## How to Use
 
-</div>
+Open `index.html` in your browser to view the portfolio locally.
 
-<br />
+## Contact
 
-### Demo Screeshots
+Feel free to reach out via email: karthikpalani1710@gmail.com
 
-![Portfolio Desktop Demo](./readme-images/desktop.png "Desktop Demo")
-
-### Contact
-
-If you want to contact with me you can reach me at [Twitter](https://www.twitter.com/codewithsadee).
-
-### License
-
-This project is **free to use** and does not contains any license.

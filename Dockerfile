@@ -1,11 +1,9 @@
-# Use an official lightweight web server image as the base image
-FROM nginx:alpine
+FROM nginx:1.27-alpine3.21
 
-# Copy your HTML file(s) to the default Nginx web server directory
-COPY . /usr/share/nginx/html/
+COPY index.html /usr/share/nginx/html/
+COPY portfolio.css /usr/share/nginx/html/
+COPY portfolio.js /usr/share/nginx/html/
 
-# Expose port 80 for the web server
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 EXPOSE 80
-
-# Start the Nginx web server in the foreground
-CMD ["nginx", "-g", "daemon off;"]

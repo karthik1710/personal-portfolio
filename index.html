@@ -1,953 +1,484 @@
-<!DOCTYPE html>
-<html lang="en">
-
+<!doctype html>
+<html lang="en" data-theme="light">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Karthik Palani - DevOps Engineer Portfolio">
-  <title>Karthik Palani | DevOps Engineer</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Karthik Palani — Senior DevOps Engineer</title>
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&family=Newsreader:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="portfolio.css?v=5" />
 
-  <!-- Tailwind Config -->
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            primary: {
-              light: '#06b6d4',
-              dark: '#0891b2',
-            }
-          }
-        }
-      }
-    }
-  </script>
+<style>
+  /* critical inline overrides for theme bg so cached external CSS can't override */
+  html[data-theme="light"]      { background-color: #f3eee2 !important; }
+  html[data-theme="light"] body { background-color: #f3eee2 !important; color: #181410 !important; }
+  html[data-theme="dark"]       { background-color: #15110d !important; }
+  html[data-theme="dark"] body  { background-color: #15110d !important; color: #f3eee2 !important; }
+</style>
 
-  <!-- React and ReactDOM -->
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-
-  <!-- Babel Standalone for JSX -->
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-    rel="stylesheet">
-
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      overflow-x: hidden;
-      cursor: none;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    /* Antigravity Cursor Effect */
-    .cursor {
-      position: fixed;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: rgba(6, 182, 212, 0.6);
-      pointer-events: none;
-      z-index: 9999;
-      transition: transform 0.1s ease;
-      mix-blend-mode: screen;
-    }
-
-    .cursor-follower {
-      position: fixed;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      border: 2px solid rgba(168, 85, 247, 0.5);
-      pointer-events: none;
-      z-index: 9998;
-      transition: all 0.3s ease;
-      mix-blend-mode: screen;
-    }
-
-    .antigravity-element {
-      transition: transform 0.3s ease;
-    }
-
-    /* Custom scrollbar - Dark Mode */
-    .dark ::-webkit-scrollbar {
-      width: 10px;
-    }
-
-    .dark ::-webkit-scrollbar-track {
-      background: #0f172a;
-    }
-
-    .dark ::-webkit-scrollbar-thumb {
-      background: linear-gradient(to bottom, #06b6d4, #a855f7);
-      border-radius: 10px;
-    }
-
-    /* Custom scrollbar - Light Mode */
-    ::-webkit-scrollbar {
-      width: 10px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: #f1f5f9;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: linear-gradient(to bottom, #06b6d4, #a855f7);
-      border-radius: 10px;
-    }
-  </style>
+<script>
+  (function(){
+    var t = localStorage.getItem("kp2-theme") || "light";
+    document.documentElement.setAttribute("data-theme", t);
+  })();
+</script>
 </head>
-
 <body>
-  <!-- Custom Cursor Elements -->
-  <div class="cursor"></div>
-  <div class="cursor-follower"></div>
-  
-  <div id="root"></div>
 
-  <!-- React Component -->
-  <script type="text/babel">
-    const { useState, useEffect, useRef } = React;
-
-    const FuturisticPortfolio = () => {
-      const [darkMode, setDarkMode] = useState(true);
-      const [activeSection, setActiveSection] = useState('home');
-      const [isMenuOpen, setIsMenuOpen] = useState(false);
-      const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-      const cursorRef = useRef(null);
-      const followerRef = useRef(null);
-
-      // Apply dark mode class to html element
-      useEffect(() => {
-        if (darkMode) {
-          document.documentElement.classList.add('dark');
-        } else {
-          document.documentElement.classList.remove('dark');
-        }
-      }, [darkMode]);
-
-      // Track mouse for parallax effects
-      useEffect(() => {
-        const handleMouseMove = (e) => {
-          setMousePosition({
-            x: (e.clientX / window.innerWidth - 0.5) * 20,
-            y: (e.clientY / window.innerHeight - 0.5) * 20,
-          });
-        };
-        window.addEventListener('mousemove', handleMouseMove);
-        return () => window.removeEventListener('mousemove', handleMouseMove);
-      }, []);
-
-      // Antigravity Cursor Effect
-      useEffect(() => {
-        const cursor = document.querySelector('.cursor');
-        const follower = document.querySelector('.cursor-follower');
-        let cursorX = 0, cursorY = 0;
-        let followerX = 0, followerY = 0;
-
-        const moveCursor = (e) => {
-          cursorX = e.clientX;
-          cursorY = e.clientY;
-          
-          // Update cursor position immediately
-          if (cursor) {
-            cursor.style.transform = `translate(${cursorX - 10}px, ${cursorY - 10}px)`;
-          }
-        };
-
-        const animateFollower = () => {
-          // Smooth following effect
-          followerX += (cursorX - followerX) * 0.1;
-          followerY += (cursorY - followerY) * 0.1;
-          
-          if (follower) {
-            follower.style.transform = `translate(${followerX - 20}px, ${followerY - 20}px)`;
-          }
-          
-          requestAnimationFrame(animateFollower);
-        };
-
-        // Antigravity effect on hoverable elements
-        const applyAntigravity = () => {
-          const elements = document.querySelectorAll('button, a, .antigravity-element, img');
-          
-          elements.forEach(element => {
-            element.addEventListener('mouseenter', () => {
-              if (cursor) cursor.style.transform = `translate(${cursorX - 10}px, ${cursorY - 10}px) scale(1.5)`;
-              if (follower) follower.style.transform = `translate(${followerX - 20}px, ${followerY - 20}px) scale(1.5)`;
-            });
-            
-            element.addEventListener('mouseleave', () => {
-              if (cursor) cursor.style.transform = `translate(${cursorX - 10}px, ${cursorY - 10}px) scale(1)`;
-              if (follower) follower.style.transform = `translate(${followerX - 20}px, ${followerY - 20}px) scale(1)`;
-            });
-
-            // Antigravity repulsion effect
-            element.addEventListener('mousemove', (e) => {
-              const rect = element.getBoundingClientRect();
-              const elementCenterX = rect.left + rect.width / 2;
-              const elementCenterY = rect.top + rect.height / 2;
-              
-              const distance = Math.sqrt(
-                Math.pow(e.clientX - elementCenterX, 2) + 
-                Math.pow(e.clientY - elementCenterY, 2)
-              );
-              
-              const maxDistance = 100;
-              const pushStrength = Math.max(0, (maxDistance - distance) / maxDistance) * 15;
-              
-              const angle = Math.atan2(
-                e.clientY - elementCenterY,
-                e.clientX - elementCenterX
-              );
-              
-              const pushX = Math.cos(angle) * pushStrength;
-              const pushY = Math.sin(angle) * pushStrength;
-              
-              element.style.transform = `translate(${-pushX}px, ${-pushY}px)`;
-            });
-            
-            element.addEventListener('mouseleave', () => {
-              element.style.transform = 'translate(0, 0)';
-            });
-          });
-        };
-
-        window.addEventListener('mousemove', moveCursor);
-        animateFollower();
-        
-        // Apply antigravity after a short delay to ensure elements are rendered
-        setTimeout(applyAntigravity, 500);
-
-        return () => {
-          window.removeEventListener('mousemove', moveCursor);
-        };
-      }, []);
-
-      // Intersection Observer for scroll animations
-      useEffect(() => {
-        const observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                entry.target.classList.add('animate-fade-in-up');
-                setActiveSection(entry.target.id);
-              }
-            });
-          },
-          { threshold: 0.3 }
-        );
-
-        document.querySelectorAll('section[id]').forEach((section) => {
-          observer.observe(section);
-        });
-
-        return () => observer.disconnect();
-      }, []);
-
-      const skills = [
-        {
-          name: 'Python',
-          icon: 'assets/icons/python.svg',
-          color: 'from-blue-500 to-cyan-500'
-        },
-        {
-          name: 'Pytest',
-          icon: 'assets/icons/pytest.svg',
-          color: 'from-blue-400 to-indigo-500'
-        },
-        {
-          name: 'Docker',
-          icon: 'assets/icons/docker.svg',
-          color: 'from-cyan-500 to-blue-600'
-        },
-        {
-          name: 'Kubernetes',
-          icon: 'assets/icons/kubernetes.svg',
-          color: 'from-blue-600 to-purple-600'
-        },
-        {
-          name: 'GitLab CI/CD',
-          icon: 'assets/icons/gitlab.svg',
-          color: 'from-orange-500 to-red-500'
-        },
-        {
-          name: 'Ansible',
-          icon: 'assets/icons/ansible.svg',
-          color: 'from-red-500 to-pink-500'
-        },
-        {
-          name: 'Terraform',
-          icon: 'assets/icons/terraform.svg',
-          color: 'from-purple-500 to-indigo-500'
-        },
-        {
-          name: 'AWS',
-          icon: 'assets/icons/aws.svg',
-          color: 'from-yellow-500 to-orange-500'
-        },
-        {
-          name: 'Azure',
-          icon: 'assets/icons/azure.svg',
-          color: 'from-blue-500 to-cyan-400'
-        },
-        {
-          name: 'GCP',
-          icon: 'assets/icons/gcp.svg',
-          color: 'from-red-500 to-yellow-500'
-        },
-      ];
-
-      const projects = [
-        {
-          title: 'BareMetal Kubernetes Cluster with HA',
-          description: 'High-availability Kubernetes cluster on bare metal infrastructure with multi-master setup',
-          tags: ['Kubernetes', 'HA', 'Networking'],
-          gradient: 'from-cyan-500 to-blue-600',
-        },
-        {
-          title: 'Hypervisor Setup for Private DataCenter',
-          description: 'Proxmox-based virtualization infrastructure for enterprise datacenter management',
-          tags: ['Proxmox', 'Virtualization'],
-          gradient: 'from-purple-500 to-pink-600',
-        },
-        {
-          title: 'Microservice Architecture Deployment',
-          description: 'Scalable microservices deployment with container orchestration and service mesh',
-          tags: ['Microservices', 'Docker', 'K8s'],
-          gradient: 'from-orange-500 to-red-600',
-        },
-        {
-          title: 'Complete GitLab CI/CD Lifecycle',
-          description: 'End-to-end CI/CD pipeline automation with testing, deployment, and monitoring',
-          tags: ['GitLab', 'CI/CD', 'Automation'],
-          gradient: 'from-green-500 to-teal-600',
-        },
-      ];
-
-      const scrollToSection = (sectionId) => {
-        document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
-        setIsMenuOpen(false);
-      };
-
-      return (
-        <div className={darkMode ? 'dark' : ''}>
-          <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 text-slate-900 dark:text-slate-100 overflow-x-hidden transition-colors duration-500 relative">
-
-            {/* Developer-themed Background */}
-            {/* Code Grid Pattern */}
-            <div className="fixed inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]" style={{
-              backgroundImage: `
-                linear-gradient(to right, #06b6d4 1px, transparent 1px),
-                linear-gradient(to bottom, #06b6d4 1px, transparent 1px)
-              `,
-              backgroundSize: '40px 40px'
-            }}></div>
-            
-            {/* Floating Code Snippets */}
-            <div className="fixed inset-0 overflow-hidden pointer-events-none opacity-[0.06] dark:opacity-[0.12]">
-              <div className="absolute top-10 left-10 text-cyan-500 dark:text-cyan-400 font-mono text-xs" style={{ animation: 'float 8s ease-in-out infinite' }}>
-                <div>const deploy = async () =&gt; &#123;</div>
-                <div className="ml-4">await k8s.apply(config);</div>
-                <div>&#125;;</div>
-              </div>
-              <div className="absolute top-1/4 right-20 text-purple-500 dark:text-purple-400 font-mono text-xs" style={{ animation: 'float-delayed 10s ease-in-out infinite' }}>
-                <div>#!/bin/bash</div>
-                <div>docker build -t app:latest .</div>
-                <div>kubectl apply -f deployment.yaml</div>
-              </div>
-              <div className="absolute bottom-1/4 left-1/3 text-orange-500 dark:text-orange-400 font-mono text-xs" style={{ animation: 'float 12s ease-in-out infinite', animationDelay: '2s' }}>
-                <div>resource "aws_instance" "server" &#123;</div>
-                <div className="ml-4">instance_type = "t3.micro"</div>
-                <div>&#125;</div>
-              </div>
-              <div className="absolute top-1/2 right-1/4 text-green-500 dark:text-green-400 font-mono text-xs" style={{ animation: 'float-delayed 9s ease-in-out infinite', animationDelay: '1s' }}>
-                <div>- name: Deploy to production</div>
-                <div className="ml-4">hosts: webservers</div>
-                <div className="ml-4">tasks:</div>
-              </div>
-              <div className="absolute bottom-20 right-10 text-blue-500 dark:text-blue-400 font-mono text-xs" style={{ animation: 'float 11s ease-in-out infinite', animationDelay: '3s' }}>
-                <div>apiVersion: v1</div>
-                <div>kind: Service</div>
-                <div>metadata:</div>
-                <div className="ml-4">name: devops-svc</div>
-              </div>
-            </div>
-
-            {/* Terminal Lines */}
-            <div className="fixed inset-0 overflow-hidden pointer-events-none opacity-[0.04] dark:opacity-[0.08]">
-              <div className="absolute top-32 left-5 text-cyan-600 dark:text-cyan-500 font-mono text-[10px]" style={{ animation: 'fadeInOut 6s ease-in-out infinite' }}>
-                <span className="text-green-500">$</span> git push origin main
-              </div>
-              <div className="absolute top-1/3 right-32 text-purple-600 dark:text-purple-500 font-mono text-[10px]" style={{ animation: 'fadeInOut 8s ease-in-out infinite', animationDelay: '2s' }}>
-                <span className="text-green-500">$</span> terraform apply --auto-approve
-              </div>
-              <div className="absolute bottom-1/3 left-1/4 text-orange-600 dark:text-orange-500 font-mono text-[10px]" style={{ animation: 'fadeInOut 7s ease-in-out infinite', animationDelay: '4s' }}>
-                <span className="text-green-500">$</span> ansible-playbook deploy.yml
-              </div>
-              <div className="absolute top-2/3 right-1/3 text-blue-600 dark:text-blue-500 font-mono text-[10px]" style={{ animation: 'fadeInOut 9s ease-in-out infinite', animationDelay: '1s' }}>
-                <span className="text-green-500">$</span> kubectl get pods -n production
-              </div>
-            </div>
-
-            {/* Binary Code Rain Effect */}
-            <div className="fixed inset-0 overflow-hidden pointer-events-none opacity-[0.08] dark:opacity-[0.15]">
-              {[...Array(20)].map((_, i) => {
-                const binarySequence = Array(30).fill(0).map(() => Math.random() > 0.5 ? '1' : '0').join('');
-                return (
-                  <div
-                    key={i}
-                    className="absolute text-cyan-500 dark:text-cyan-400 font-mono text-xs leading-tight"
-                    style={{
-                      left: `${(i * 5) + 1}%`,
-                      animation: `binaryRain ${10 + (i % 5)}s linear infinite`,
-                      animationDelay: `${i * 0.3}s`,
-                      whiteSpace: 'pre'
-                    }}
-                  >
-                    {binarySequence.split('').map((bit, j) => (
-                      <div key={j}>{bit}</div>
-                    ))}
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Programming Symbols */}
-            <div className="fixed inset-0 overflow-hidden pointer-events-none opacity-[0.04] dark:opacity-[0.08]">
-              <div className="absolute top-20 right-1/4 text-4xl text-purple-500/30 dark:text-purple-400/30" style={{ animation: 'float 15s ease-in-out infinite' }}>&lt;/&gt;</div>
-              <div className="absolute bottom-1/4 left-1/4 text-5xl text-cyan-500/30 dark:text-cyan-400/30" style={{ animation: 'float-delayed 12s ease-in-out infinite' }}>&#123; &#125;</div>
-              <div className="absolute top-1/3 left-1/2 text-4xl text-orange-500/30 dark:text-orange-400/30" style={{ animation: 'float 14s ease-in-out infinite', animationDelay: '2s' }}>[ ]</div>
-              <div className="absolute bottom-40 right-1/3 text-3xl text-green-500/30 dark:text-green-400/30" style={{ animation: 'float-delayed 13s ease-in-out infinite', animationDelay: '1s' }}>=&gt;</div>
-            </div>
-
-            {/* Animated Background Elements */}
-            <div className="fixed inset-0 overflow-hidden pointer-events-none">
-              {/* Floating Geometric Shapes */}
-              <div
-                className="absolute top-1/4 left-1/4 w-20 h-20 border-2 border-cyan-500/20 dark:border-cyan-500/20 rotate-45"
-                style={{
-                  transform: `translate(${mousePosition.x}px, ${mousePosition.y}px) rotate(45deg)`,
-                  animation: 'float 6s ease-in-out infinite'
-                }}
-              ></div>
-              <div
-                className="absolute top-2/3 right-1/4 w-16 h-16 border-2 border-purple-500/20 dark:border-purple-500/20 rounded-full"
-                style={{
-                  transform: `translate(${-mousePosition.x}px, ${-mousePosition.y}px)`,
-                  animation: 'float-delayed 8s ease-in-out infinite'
-                }}
-              ></div>
-            </div>
-
-            {/* Navigation */}
-            <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-white/80 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800/50 shadow-sm">
-              <div className="max-w-7xl mx-auto px-6 py-4">
-                <div className="flex justify-between items-center">
-                  <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-600 to-purple-600 dark:from-cyan-400 dark:to-purple-500 bg-clip-text text-transparent">
-                    KARTHIK PALANI
-                  </h1>
-
-                  {/* Desktop Navigation */}
-                  <div className="hidden md:flex items-center gap-8">
-                    {['home', 'about', 'skills', 'projects', 'contact'].map((section) => (
-                      <button
-                        key={section}
-                        onClick={() => scrollToSection(section)}
-                        className={`capitalize transition-all duration-300 hover:text-cyan-600 dark:hover:text-cyan-400 ${activeSection === section ? 'text-cyan-600 dark:text-cyan-400 font-semibold' : 'text-slate-600 dark:text-slate-300'
-                          }`}
-                      >
-                        {section}
-                      </button>
-                    ))}
-
-                    {/* Dark Mode Toggle */}
-                    <button
-                      onClick={() => setDarkMode(!darkMode)}
-                      className="p-2 rounded-full bg-gradient-to-r from-cyan-500 to-purple-500 hover:scale-110 transition-transform duration-300 shadow-lg"
-                      title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-                    >
-                      {darkMode ? '🌙' : '☀️'}
-                    </button>
-                  </div>
-
-                  {/* Mobile Menu Button */}
-                  <button
-                    onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    className="md:hidden text-3xl text-slate-700 dark:text-slate-300"
-                  >
-                    {isMenuOpen ? '✕' : '☰'}
-                  </button>
-                </div>
-
-                {/* Mobile Menu */}
-                {isMenuOpen && (
-                  <div className="md:hidden mt-4 pb-4 flex flex-col gap-4">
-                    {['home', 'about', 'skills', 'projects', 'contact'].map((section) => (
-                      <button
-                        key={section}
-                        onClick={() => scrollToSection(section)}
-                        className="capitalize text-left py-2 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors text-slate-700 dark:text-slate-300"
-                      >
-                        {section}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </nav>
-
-            {/* Hero Section */}
-            <section id="home" className="min-h-screen flex items-center justify-center relative pt-20 px-6">
-              <div className="max-w-6xl mx-auto text-center z-10">
-                {/* Glassmorphic Card */}
-                <div className="backdrop-blur-xl bg-white/60 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-3xl p-12 shadow-2xl hover:shadow-cyan-500/20 transition-all duration-500 hover:scale-105">
-
-                  {/* Animated Greeting */}
-                  <div className="mb-6">
-                    <span className="text-cyan-600 dark:text-cyan-400 text-xl font-semibold">Hello, I'm</span>
-                  </div>
-
-                  {/* Name with Gradient */}
-                  <h1 className="text-6xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-cyan-600 via-purple-600 to-orange-600 dark:from-cyan-400 dark:via-purple-500 dark:to-orange-500 bg-clip-text text-transparent" style={{ backgroundSize: '200% 200%', animation: 'gradient 5s ease infinite' }}>
-                    Karthik Palani
-                  </h1>
-
-                  {/* Title */}
-                  <h2 className="text-3xl md:text-4xl font-semibold text-slate-700 dark:text-slate-300 mb-8">
-                    Senior DevOps Engineer
-                  </h2>
-
-                  {/* Description */}
-                  <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-12">
-                    7+ years of expertise in designing, implementing, and maintaining infrastructure for large-scale web applications.
-                  </p>
-
-                  {/* Floating Stats */}
-                  <div className="flex flex-wrap justify-center gap-8 mb-12">
-                    <div className="backdrop-blur-lg bg-gradient-to-br from-cyan-100 to-blue-100 dark:from-cyan-500/20 dark:to-blue-600/20 border border-cyan-300 dark:border-cyan-500/30 rounded-2xl px-8 py-4 hover:scale-110 transition-transform duration-300 shadow-lg">
-                      <div className="text-4xl font-bold text-cyan-600 dark:text-cyan-400">7+</div>
-                      <div className="text-sm text-slate-700 dark:text-slate-300">Years Experience</div>
-                    </div>
-                    <div className="backdrop-blur-lg bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-500/20 dark:to-pink-600/20 border border-purple-300 dark:border-purple-500/30 rounded-2xl px-8 py-4 hover:scale-110 transition-transform duration-300 shadow-lg">
-                      <div className="text-4xl font-bold text-purple-600 dark:text-purple-400">20+</div>
-                      <div className="text-sm text-slate-700 dark:text-slate-300">Projects Completed</div>
-                    </div>
-                  </div>
-
-                  {/* CTA Buttons */}
-                  <div className="flex flex-wrap justify-center gap-6">
-                    <button
-                      onClick={() => scrollToSection('projects')}
-                      className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-full font-semibold hover:shadow-lg hover:shadow-cyan-500/50 hover:scale-105 transition-all duration-300"
-                    >
-                      View Projects
-                    </button>
-                    <button
-                      onClick={() => scrollToSection('contact')}
-                      className="px-8 py-4 backdrop-blur-lg bg-white/80 dark:bg-white/10 border border-slate-300 dark:border-white/20 rounded-full font-semibold hover:bg-white dark:hover:bg-white/20 hover:scale-105 transition-all duration-300 text-slate-700 dark:text-white"
-                    >
-                      Get In Touch
-                    </button>
-                  </div>
-                </div>
-
-                {/* Scroll Indicator */}
-                <div className="mt-16 animate-bounce">
-                  <div className="text-4xl text-cyan-600 dark:text-cyan-400">↓</div>
-                  <div className="text-sm text-slate-600 dark:text-slate-400">Scroll to explore</div>
-                </div>
-              </div>
-            </section>
-
-            {/* About Section */}
-            <section id="about" className="min-h-screen flex items-center py-20 px-6">
-              <div className="max-w-6xl mx-auto">
-                <div className="grid md:grid-cols-2 gap-12 items-center">
-
-                  {/* Image Side */}
-                  <div className="relative group">
-                    <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-3xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
-                    <div className="relative backdrop-blur-xl bg-white/60 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-3xl p-8 hover:scale-105 transition-transform duration-500 shadow-xl overflow-hidden">
-                      <div className="aspect-square bg-gradient-to-br from-cyan-50 to-purple-50 dark:from-slate-800 dark:to-slate-900 rounded-2xl flex items-center justify-center relative">
-                        {/* Animated DevOps Illustration */}
-                        <svg viewBox="0 0 200 200" className="w-full h-full">
-                          {/* Background grid */}
-                          <defs>
-                            <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-                              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-cyan-300 dark:text-cyan-700" opacity="0.3"/>
-                            </pattern>
-                            <linearGradient id="mainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                              <stop offset="0%" stopColor="#06b6d4" />
-                              <stop offset="100%" stopColor="#a855f7" />
-                            </linearGradient>
-                          </defs>
-                          <rect width="200" height="200" fill="url(#grid)" />
-                          
-                          {/* Central Developer Icon */}
-                          <circle cx="100" cy="90" r="35" fill="url(#mainGradient)" opacity="0.2">
-                            <animate attributeName="r" values="35;38;35" dur="3s" repeatCount="indefinite"/>
-                          </circle>
-                          <circle cx="100" cy="90" r="30" fill="url(#mainGradient)" />
-                          
-                          {/* Developer head */}
-                          <circle cx="100" cy="80" r="15" fill="white" />
-                          <rect x="88" y="95" width="24" height="20" rx="3" fill="white" />
-                          
-                          {/* Laptop */}
-                          <rect x="70" y="130" width="60" height="35" rx="3" fill="url(#mainGradient)" opacity="0.8"/>
-                          <rect x="75" y="135" width="50" height="25" rx="2" fill="#1e293b" className="dark:fill-slate-700"/>
-                          <line x1="75" y1="145" x2="120" y2="145" stroke="#06b6d4" strokeWidth="1" opacity="0.5">
-                            <animate attributeName="x2" values="75;120;75" dur="2s" repeatCount="indefinite"/>
-                          </line>
-                          
-                          {/* Floating Docker Icon */}
-                          <g transform="translate(40, 50)" opacity="0.8">
-                            <rect width="20" height="20" rx="2" fill="#2496ed" />
-                            <rect x="2" y="8" width="4" height="4" fill="white" />
-                            <rect x="7" y="8" width="4" height="4" fill="white" />
-                            <rect x="12" y="8" width="4" height="4" fill="white" />
-                            <rect x="7" y="3" width="4" height="4" fill="white" />
-                            <animateTransform attributeName="transform" type="translate" values="40,50; 40,45; 40,50" dur="2s" repeatCount="indefinite"/>
-                          </g>
-                          
-                          {/* Floating Kubernetes Icon */}
-                          <g transform="translate(145, 60)" opacity="0.8">
-                            <circle r="10" fill="#326ce5" />
-                            <path d="M 0,-8 L 3,3 L -3,3 Z" fill="white" transform="rotate(0)"/>
-                            <animateTransform attributeName="transform" type="translate" values="145,60; 145,55; 145,60" dur="2.5s" repeatCount="indefinite"/>
-                          </g>
-                          
-                          {/* Floating Terminal Icon */}
-                          <g transform="translate(150, 120)" opacity="0.8">
-                            <rect width="18" height="14" rx="2" fill="#10b981" />
-                            <text x="3" y="10" fontSize="8" fill="white" fontFamily="monospace">&gt;_</text>
-                            <animateTransform attributeName="transform" type="translate" values="150,120; 150,115; 150,120" dur="3s" repeatCount="indefinite"/>
-                          </g>
-                          
-                          {/* Git Branch Icon */}
-                          <g transform="translate(35, 125)" opacity="0.8">
-                            <circle r="4" fill="#f97316" />
-                            <line x1="0" y1="4" x2="0" y2="12" stroke="#f97316" strokeWidth="2"/>
-                            <circle cy="15" r="4" fill="#f97316" />
-                            <animateTransform attributeName="transform" type="translate" values="35,125; 35,120; 35,125" dur="2.8s" repeatCount="indefinite"/>
-                          </g>
-                          
-                          {/* Cloud Icons */}
-                          <ellipse cx="60" cy="25" rx="12" ry="8" fill="#0ea5e9" opacity="0.6">
-                            <animate attributeName="cx" values="60;65;60" dur="4s" repeatCount="indefinite"/>
-                          </ellipse>
-                          <ellipse cx="140" cy="35" rx="15" ry="10" fill="#a855f7" opacity="0.6">
-                            <animate attributeName="cx" values="140;135;140" dur="3.5s" repeatCount="indefinite"/>
-                          </ellipse>
-                          
-                          {/* Data flow lines */}
-                          <path d="M 50 90 Q 75 70 100 80" stroke="#06b6d4" strokeWidth="2" fill="none" opacity="0.4" strokeDasharray="5,5">
-                            <animate attributeName="stroke-dashoffset" from="0" to="10" dur="1s" repeatCount="indefinite"/>
-                          </path>
-                          <path d="M 150 90 Q 125 70 100 80" stroke="#a855f7" strokeWidth="2" fill="none" opacity="0.4" strokeDasharray="5,5">
-                            <animate attributeName="stroke-dashoffset" from="0" to="10" dur="1s" repeatCount="indefinite"/>
-                          </path>
-                        </svg>
-                        
-                        {/* Overlay DevOps text */}
-                        <div className="absolute bottom-4 left-0 right-0 text-center">
-                          <span className="text-sm font-bold bg-gradient-to-r from-cyan-600 to-purple-600 dark:from-cyan-400 dark:to-purple-400 bg-clip-text text-transparent">
-                            DevOps Engineer
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Content Side */}
-                  <div className="space-y-6">
-                    <div className="text-cyan-600 dark:text-cyan-400 text-xl font-semibold">About Me</div>
-                    <h2 className="text-5xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400 bg-clip-text text-transparent">
-                      Senior DevOps Engineer
-                    </h2>
-                    <p className="text-xl text-slate-700 dark:text-slate-400 leading-relaxed">
-                      Designing, implementing and maintaining infrastructure for large-scale web applications and embedded systems projects.
-                    </p>
-                    <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
-                      Proficient in automation, cloud computing, CI/CD, configuration management, and monitoring. Experienced in test automation using pytest framework and working with embedded projects requiring specialized deployment strategies.
-                    </p>
-
-                    {/* Tech Tags */}
-                    <div className="flex flex-wrap gap-3 pt-4">
-                      {['Cloud Architecture', 'CI/CD', 'Infrastructure as Code', 'Container Orchestration', 'Test Automation', 'Embedded Systems'].map((tag) => (
-                        <span
-                          key={tag}
-                          className="px-4 py-2 backdrop-blur-lg bg-gradient-to-r from-cyan-100 to-purple-100 dark:from-cyan-500/20 dark:to-purple-500/20 border border-cyan-300 dark:border-cyan-500/30 rounded-full text-sm font-semibold hover:scale-110 transition-transform duration-300 text-slate-700 dark:text-white shadow-md"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    <button
-                      onClick={() => scrollToSection('contact')}
-                      className="mt-8 px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-full font-semibold hover:shadow-lg hover:shadow-purple-500/50 hover:scale-105 transition-all duration-300"
-                    >
-                      Let's Connect
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            {/* Skills Section */}
-            <section id="skills" className="min-h-screen flex items-center py-20 px-6">
-              <div className="max-w-6xl mx-auto w-full">
-                <div className="text-center mb-16">
-                  <div className="text-cyan-600 dark:text-cyan-400 text-xl font-semibold mb-4">My Expertise</div>
-                  <h2 className="text-5xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400 bg-clip-text text-transparent">
-                    Skills & Technologies
-                  </h2>
-                </div>
-
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
-                  {skills.map((skill, index) => (
-                    <div
-                      key={skill.name}
-                      className="relative group backdrop-blur-xl bg-white/60 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl p-8 hover:scale-110 hover:shadow-2xl transition-all duration-500 shadow-lg"
-                    >
-                      {/* Gradient Background on Hover */}
-                      <div className={`absolute inset-0 bg-gradient-to-br ${skill.color} opacity-0 group-hover:opacity-20 rounded-2xl transition-opacity duration-500`}></div>
-
-                      <div className="relative z-10 text-center">
-                        {/* Icon */}
-                        <div className="flex items-center justify-center mb-4 h-16">
-                          <img
-                            src={skill.icon}
-                            alt={skill.name}
-                            className="h-16 w-16 object-contain group-hover:scale-125 transition-transform duration-500"
-                          />
-                        </div>
-
-                        {/* Skill Name */}
-                        <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:from-cyan-600 group-hover:to-purple-600 dark:group-hover:from-cyan-400 dark:group-hover:to-purple-500 transition-all duration-300">
-                          {skill.name}
-                        </h3>
-                      </div>
-
-                      {/* Glow Effect */}
-                      <div className={`absolute inset-0 bg-gradient-to-br ${skill.color} opacity-0 group-hover:opacity-30 blur-xl rounded-2xl transition-opacity duration-500 -z-10`}></div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
-
-            {/* Projects Section */}
-            <section id="projects" className="min-h-screen flex items-center py-20 px-6">
-              <div className="max-w-6xl mx-auto w-full">
-                <div className="text-center mb-16">
-                  <div className="text-cyan-600 dark:text-cyan-400 text-xl font-semibold mb-4">Portfolio</div>
-                  <h2 className="text-5xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400 bg-clip-text text-transparent mb-6">
-                    Featured Projects
-                  </h2>
-                  <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-                    Delivering excellence in infrastructure automation and cloud solutions
-                  </p>
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-8">
-                  {projects.map((project, index) => (
-                    <div
-                      key={project.title}
-                      className="relative group backdrop-blur-xl bg-white/60 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-3xl p-8 hover:scale-105 hover:shadow-2xl transition-all duration-500 cursor-default shadow-lg"
-                    >
-                      {/* Gradient Overlay */}
-                      <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-0 group-hover:opacity-10 rounded-3xl transition-opacity duration-500`}></div>
-
-                      <div className="relative z-10">
-                        {/* Project Icon */}
-                        <div className={`w-16 h-16 bg-gradient-to-br ${project.gradient} rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
-                          🚀
-                        </div>
-
-                        {/* Title */}
-                        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:from-cyan-600 group-hover:to-purple-600 dark:group-hover:from-cyan-400 dark:group-hover:to-purple-500 transition-all duration-300">
-                          {project.title}
-                        </h3>
-
-                        {/* Description */}
-                        <p className="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
-                          {project.description}
-                        </p>
-
-                        {/* Tags */}
-                        <div className="flex flex-wrap gap-2">
-                          {project.tags.map((tag) => (
-                            <span
-                              key={tag}
-                              className="px-3 py-1 bg-slate-100 dark:bg-white/10 border border-slate-300 dark:border-white/20 rounded-full text-sm text-slate-700 dark:text-slate-300"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Glow Effect */}
-                      <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-0 group-hover:opacity-20 blur-2xl rounded-3xl transition-opacity duration-500 -z-10`}></div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
-
-            {/* Contact Section */}
-            <section id="contact" className="min-h-screen flex items-center py-20 px-6">
-              <div className="max-w-4xl mx-auto w-full">
-                <div className="text-center mb-16">
-                  <div className="text-cyan-600 dark:text-cyan-400 text-xl font-semibold mb-4">Get In Touch</div>
-                  <h2 className="text-5xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400 bg-clip-text text-transparent">
-                    Let's Connect
-                  </h2>
-                </div>
-
-                {/* Contact Info Cards */}
-                <div className="grid md:grid-cols-3 gap-6">
-                  <div className="backdrop-blur-lg bg-gradient-to-br from-cyan-100 to-blue-100 dark:from-cyan-500/10 dark:to-blue-600/10 border border-cyan-300 dark:border-cyan-500/30 rounded-2xl p-8 text-center hover:scale-105 transition-transform duration-300 shadow-xl">
-                    <div className="text-5xl mb-4">📍</div>
-                    <h3 className="font-bold text-slate-900 dark:text-white mb-3 text-lg">Location</h3>
-                    <p className="text-slate-700 dark:text-slate-400">Chennai, TamilNadu</p>
-                  </div>
-                  <div className="backdrop-blur-lg bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-500/10 dark:to-pink-600/10 border border-purple-300 dark:border-purple-500/30 rounded-2xl p-8 text-center hover:scale-105 transition-transform duration-300 shadow-xl">
-                    <div className="text-5xl mb-4">📧</div>
-                    <h3 className="font-bold text-slate-900 dark:text-white mb-3 text-lg">Email</h3>
-                    <a href="mailto:karthikpalani1710@gmail.com" className="text-slate-700 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors break-all">
-                      karthikpalani1710@gmail.com
-                    </a>
-                  </div>
-                  <div className="backdrop-blur-lg bg-gradient-to-br from-orange-100 to-red-100 dark:from-orange-500/10 dark:to-red-600/10 border border-orange-300 dark:border-orange-500/30 rounded-2xl p-8 text-center hover:scale-105 transition-transform duration-300 shadow-xl">
-                    <div className="text-5xl mb-4">📱</div>
-                    <h3 className="font-bold text-slate-900 dark:text-white mb-3 text-lg">Phone</h3>
-                    <a href="tel:+917695844221" className="text-slate-700 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors">
-                      +91 7695844221
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            {/* Footer */}
-            <footer className="py-8 px-6 border-t border-slate-200 dark:border-slate-800/50">
-              <div className="max-w-6xl mx-auto text-center text-slate-600 dark:text-slate-400">
-                <p>© 2026 Karthik Palani. All rights reserved.</p>
-              </div>
-            </footer>
-
-            {/* Back to Top Button */}
-            <button
-              onClick={() => scrollToSection('home')}
-              className="fixed bottom-8 right-8 p-4 bg-gradient-to-r from-cyan-500 to-purple-600 text-white rounded-full shadow-lg hover:shadow-cyan-500/50 hover:scale-110 transition-all duration-300 z-50"
-            >
-              <span className="text-2xl">↑</span>
-            </button>
-          </div>
-
-          <style>{`
-            @keyframes fade-in-up {
-              from {
-                opacity: 0;
-                transform: translateY(30px);
-              }
-              to {
-                opacity: 1;
-                transform: translateY(0);
-              }
-            }
-
-            @keyframes float {
-              0%, 100% {
-                transform: translateY(0px);
-              }
-              50% {
-                transform: translateY(-20px);
-              }
-            }
-
-            @keyframes float-delayed {
-              0%, 100% {
-                transform: translateY(0px);
-              }
-              50% {
-                transform: translateY(-30px);
-              }
-            }
-
-            @keyframes gradient {
-              0%, 100% {
-                background-position: 0% 50%;
-              }
-              50% {
-                background-position: 100% 50%;
-              }
-            }
-
-            @keyframes binaryRain {
-              0% {
-                transform: translateY(-100%);
-                opacity: 0;
-              }
-              10% {
-                opacity: 0.5;
-              }
-              90% {
-                opacity: 0.5;
-              }
-              100% {
-                transform: translateY(100vh);
-                opacity: 0;
-              }
-            }
-
-            @keyframes fadeInOut {
-              0%, 100% {
-                opacity: 0;
-                transform: translateX(-10px);
-              }
-              50% {
-                opacity: 1;
-                transform: translateX(0);
-              }
-            }
-
-            .animate-fade-in-up {
-              animation: fade-in-up 0.8s ease-out forwards;
-            }
-          `}</style>
+<div class="paper-grain"></div>
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- ============== TOP BAR ============== -->
+<header class="topbar">
+  <a href="#top" class="logo">
+    <span class="mark">KP</span>
+    <span class="mark-sep">/</span>
+    <span class="mark-sub">Karthik Palani</span>
+  </a>
+  <nav class="topnav">
+    <a href="#currently"><span class="n">01</span>Currently</a>
+    <a href="#experience"><span class="n">02</span>Experience</a>
+    <a href="#work"><span class="n">03</span>Work</a>
+    <a href="#stack"><span class="n">04</span>Stack</a>
+    <a href="#contact"><span class="n">05</span>Contact</a>
+  </nav>
+  <div class="topbar-right">
+    <span class="clock" id="clock">— · IST</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <svg viewBox="0 0 24 24" class="icon-sun" width="14" height="14"><circle cx="12" cy="12" r="4" fill="currentColor"/><g stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="12" y1="3" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="21"/><line x1="3" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="21" y2="12"/><line x1="5.5" y1="5.5" x2="6.9" y2="6.9"/><line x1="17.1" y1="17.1" x2="18.5" y2="18.5"/><line x1="5.5" y1="18.5" x2="6.9" y2="17.1"/><line x1="17.1" y1="6.9" x2="18.5" y2="5.5"/></g></svg>
+      <svg viewBox="0 0 24 24" class="icon-moon" width="14" height="14"><path d="M20 13.5A8 8 0 1 1 10.5 4a6.5 6.5 0 0 0 9.5 9.5z" fill="currentColor"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- ============== HERO ============== -->
+<section class="hero" id="top">
+  <div class="hero-name">Karthik <span class="name-ital">Palani</span><span class="name-stop">.</span></div>
+
+  <h1 class="hero-title">
+    <span class="line">Senior DevOps</span>
+    <span class="line"><span class="ital">Engineer</span><svg class="underline" viewBox="0 0 400 14" preserveAspectRatio="none"><path d="M2 8 Q 100 2 200 6 T 398 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> &amp;</span>
+    <span class="line">Platform Lead.</span>
+  </h1>
+
+  <div class="hero-intro">
+    I build the infrastructure layer — pipelines, containers, and AI-augmented automation that lets engineering teams ship reliably and fast. <span id="heroYearsWord">Eight</span> years across cloud architecture, SRE, IoT, embedded, and now AI agents.
+  </div>
+
+  <div class="hero-meta">
+    <div class="meta-cell">
+      <div class="meta-label">Based in</div>
+      <div class="meta-value">Chennai, IN</div>
+    </div>
+    <div class="meta-cell">
+      <div class="meta-label">Currently</div>
+      <div class="meta-value">ESAB India Ltd <span class="now-dot">●</span></div>
+    </div>
+    <div class="meta-cell">
+      <div class="meta-label">Experience</div>
+      <div class="meta-value" id="metaYears">8.7 years</div>
+    </div>
+    <div class="meta-cell">
+      <div class="meta-label">Email</div>
+      <div class="meta-value"><a href="mailto:karthikpalani1710@gmail.com">karthikpalani1710<wbr/>@gmail.com</a></div>
+    </div>
+  </div>
+
+  <div class="hero-foot">
+    <span class="scroll-cue">↓ scroll to read</span>
+  </div>
+</section>
+
+<!-- ============== INDEX ============== -->
+<section class="contents">
+  <div class="contents-rail">CONTENTS</div>
+  <ol class="toc">
+    <li><a href="#currently"><span class="num">01</span><span class="title">Currently</span><span class="meta">↘</span></a></li>
+    <li><a href="#experience"><span class="num">02</span><span class="title">Experience</span><span class="meta">↘</span></a></li>
+    <li><a href="#work"><span class="num">03</span><span class="title">Work</span><span class="meta">↘</span></a></li>
+    <li><a href="#stack"><span class="num">04</span><span class="title">Stack and Tooling</span><span class="meta">↘</span></a></li>
+    <li><a href="#contact"><span class="num">05</span><span class="title">Contact</span><span class="meta">↘</span></a></li>
+  </ol>
+</section>
+
+<!-- ============== CURRENTLY ============== -->
+<section class="section section-currently" id="currently">
+  <div class="section-head">
+    <div class="section-marker">§ 01</div>
+    <h2 class="section-title">Currently<span class="caret">.</span></h2>
+    <div class="section-sub" style="max-width: 550px">What I'm focused on right now.</div>
+  </div>
+
+  <div class="now-grid">
+    <article class="now-card big">
+      <div class="now-tag">A. Day job</div>
+      <p>Leading a <span class="hl">full-stack &amp; DevOps team</span> at <strong>ESAB India</strong>, owning end-to-end infrastructure for a large-scale project.</p>
+    </article>
+
+    <article class="now-card">
+      <div class="now-tag">B. AI</div>
+      <p>AI agents for <strong>code review</strong>, <strong>project management</strong>, and <strong>test orchestration</strong>.</p>
+    </article>
+
+    <article class="now-card">
+      <div class="now-tag">C. Embedded</div>
+      <p><strong>HiL</strong> (Hardware-in-the-Loop) embedded test setups and automation infrastructure.</p>
+    </article>
+
+    <article class="now-card">
+      <div class="now-tag">D. Platforms</div>
+      <p><strong>Kubernetes</strong>, container orchestration, and <strong>VM</strong> platforms — AKS and cluster-managed workloads.</p>
+    </article>
+
+    <article class="now-card wide">
+      <div class="now-tag">E. Philosophy</div>
+      <p>I care about the <span class="hl">compounding return of small, boring automation</span> — the runbook that prevents a 3am page, the pipeline that makes a Friday deploy feel safe, the IaC module a new joiner can understand in 10 minutes.</p>
+    </article>
+  </div>
+</section>
+
+<!-- ============== EXPERIENCE ============== -->
+<section class="section" id="experience">
+  <div class="section-head">
+    <div class="section-marker">§ 02</div>
+    <h2 class="section-title">Experience<span class="caret">.</span></h2>
+    <div class="section-sub" style="max-width: 550px">Six roles across <span id="expSubYearsWord">eight</span> years — healthcare operations, independent cloud &amp; DevOps consulting, SRE, DevOps, and now infrastructure leadership.</div>
+  </div>
+
+  <div class="exp-list">
+    <article class="exp-row current">
+      <div class="exp-year">
+        <div class="y-from">2024</div>
+        <div class="y-to">— now</div>
+        <div class="y-tag">CURRENT</div>
+      </div>
+      <div class="exp-main">
+        <div class="exp-role">Senior DevOps Engineer</div>
+        <div class="exp-company">ESAB India Limited <span class="exp-loc">· Chennai</span></div>
+        <p class="exp-desc">End-to-end infrastructure ownership for a large-scale project. Leading a full-stack &amp; DevOps team, building HiL embedded test setups, and developing micro AI agents — MCP servers, CodeSentinel, PM-Agent, TestFlow Pro.</p>
+        <div class="exp-tags">
+          <span>Kubernetes</span><span>HiL Automation</span><span>RAG · LLMs</span><span>MCP</span><span>Team Lead</span>
         </div>
-      );
-    };
+      </div>
+    </article>
 
-    // Render the component
-    ReactDOM.render(<FuturisticPortfolio />, document.getElementById('root'));
-  </script>
+    <article class="exp-row">
+      <div class="exp-year">
+        <div class="y-from">2023</div>
+        <div class="y-to">— 2024</div>
+      </div>
+      <div class="exp-main">
+        <div class="exp-role">Senior DevOps Engineer</div>
+        <div class="exp-company">Ebot AI IT Solutions <span class="exp-loc">· Chennai</span></div>
+        <p class="exp-desc">Cluster migrations across on-premise and cloud infrastructure. Hands-on with IaC and Ansible for provisioning + configuration. Managed full containerized dev and production environments on Kubernetes.</p>
+        <div class="exp-tags">
+          <span>Kubernetes</span><span>Ansible</span><span>Terraform</span><span>GitLab CI</span><span>Jenkins</span><span>Migrations</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="exp-row">
+      <div class="exp-year">
+        <div class="y-from">2022</div>
+        <div class="y-to">— 2023</div>
+      </div>
+      <div class="exp-main">
+        <div class="exp-role">DevOps Engineer</div>
+        <div class="exp-company">Motherson Technology Services <span class="exp-loc">· Client: ESAB India</span></div>
+        <p class="exp-desc">Managed AKS clusters and Azure resources end-to-end. Built and maintained CI/CD pipelines on GitLab and Jenkins, including IoT automation builds.</p>
+        <div class="exp-tags">
+          <span>AKS</span><span>Azure</span><span>GitLab CI</span><span>Jenkins</span><span>IoT</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="exp-row">
+      <div class="exp-year">
+        <div class="y-from">2019</div>
+        <div class="y-to">— 2022</div>
+      </div>
+      <div class="exp-main">
+        <div class="exp-role">SRE Engineer</div>
+        <div class="exp-company">Xmedia Solutions <span class="exp-loc">· Chennai</span></div>
+        <p class="exp-desc">Full-lifecycle CRM development and deployment on Odoo — dev through production. Managed on-premise cluster infrastructure provisioning and ongoing maintenance.</p>
+      </div>
+    </article>
+
+    <article class="exp-row">
+      <div class="exp-year">
+        <div class="y-from">2018</div>
+        <div class="y-to">— 2019</div>
+      </div>
+      <div class="exp-main">
+        <div class="exp-role">DevOps &amp; Cloud Architect</div>
+        <div class="exp-company">Freelance <span class="exp-loc">· Remote</span></div>
+        <p class="exp-desc">Architected cloud infrastructure for monolith-to-microservices migrations. Built CI/CD pipelines on GitLab and Jenkins, plus Python + Pytest automation frameworks.</p>
+        <div class="exp-tags">
+          <span>GitLab</span><span>Jenkins</span><span>Python</span><span>Pytest</span><span>Microservices</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="exp-row">
+      <div class="exp-year">
+        <div class="y-from">2017</div>
+        <div class="y-to">— 2018</div>
+      </div>
+      <div class="exp-main">
+        <div class="exp-role">HC &amp; Insurance Ops</div>
+        <div class="exp-company">NTT Data Services <span class="exp-loc">· Chennai</span></div>
+        <p class="exp-desc">Operations team member in Healthcare Process and Adjudication. First exposure to large-scale enterprise workflows and cross-functional process management.</p>
+        <div class="exp-tags">
+          <span>Healthcare IT</span><span>Operations</span><span>Adjudication</span>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ============== WORK ============== -->
+<section class="section section-work" id="work">
+  <div class="section-head">
+    <div class="section-marker">§ 03</div>
+    <h2 class="section-title">Work<span class="caret">.</span></h2>
+    <div class="section-sub" style="max-width: 551px">Production AI agents, embedded test infrastructure, system design, and cloud architecture — shipped at ESAB India and in earlier roles.</div>
+  </div>
+
+  <div class="work-grid">
+
+    <article class="work-card">
+      <div class="work-meta">
+        <span class="work-id">A.001</span>
+        <span class="work-dot">●</span>
+      </div>
+      <h3 class="work-title">CodeSentinel<span class="work-sub">— an AI code review framework</span></h3>
+      <p class="work-body">An AI code review framework that watches every pull request: indexes the repo, runs RAG against internal patterns, flags risky changes, and enforces team standards — integrated into CI before a human gets paged for review.</p>
+      <div class="work-stats">
+        <div><span class="v">RAG</span><span class="k">retrieval</span></div>
+        <div><span class="v">Local LLM</span><span class="k">runtime</span></div>
+        <div><span class="v">CI</span><span class="k">native</span></div>
+      </div>
+    </article>
+
+    <article class="work-card">
+      <div class="work-meta">
+        <span class="work-id">A.002</span>
+      </div>
+      <h3 class="work-title">PM-Agent</h3>
+      <p class="work-body">AI-driven project management. Tracks tasks, surfaces blockers, and automates routine PM workflows — so the project manager can focus on actual decisions, not status pings.</p>
+      <div class="work-stats">
+        <div><span class="v">local LLM</span><span class="k">stack</span></div>
+        <div><span class="v">MCP</span><span class="k">protocol</span></div>
+      </div>
+    </article>
+
+    <article class="work-card">
+      <div class="work-meta">
+        <span class="work-id">A.003</span>
+      </div>
+      <h3 class="work-title">TestFlow <span class="ital">Pro</span></h3>
+      <p class="work-body">End-to-end AI automation testing. Orchestrates whole test pipelines, generates and adapts test cases from intent, and ships results back into CI in a form humans can read.</p>
+      <div class="work-stats">
+        <div><span class="v">E2E</span><span class="k">automation</span></div>
+        <div><span class="v">AI-native</span><span class="k">test gen</span></div>
+      </div>
+    </article>
+
+    <article class="work-card">
+      <div class="work-meta">
+        <span class="work-id">A.004</span>
+      </div>
+      <h3 class="work-title">HiL Test <span class="ital">Infrastructure</span></h3>
+      <p class="work-body">Hardware-in-the-Loop embedded test automation — CI-integrated, reproducible, runs on bare metal. Built for the firmware team to stop fearing the merge button.</p>
+      <div class="work-stats">
+        <div><span class="v">HiL</span><span class="k">embedded</span></div>
+        <div><span class="v">CI</span><span class="k">integrated</span></div>
+      </div>
+    </article>
+
+    <article class="work-card">
+      <div class="work-meta">
+        <span class="work-id">A.005</span>
+      </div>
+      <h3 class="work-title">System <span class="ital">Design</span></h3>
+      <p class="work-body">End-to-end platform architecture — Kubernetes clusters for services, Proxmox VMs for legacy workloads, and one CI surface that ships to both. Trade-offs documented, runbooks per component.</p>
+      <div class="work-stats">
+        <div><span class="v">K8s</span><span class="k">+ VM</span></div>
+        <div><span class="v">CI/CD</span><span class="k">unified</span></div>
+      </div>
+    </article>
+
+    <article class="work-card">
+      <div class="work-meta">
+        <span class="work-id">A.006</span>
+      </div>
+      <h3 class="work-title">Microservices <span class="ital">→</span> Monolith</h3>
+      <p class="work-body">Consolidated a fragmented set of small services back into a deployable monolith. Cut deploy time by 60%, removed three layers of inter-service auth, dropped ops overhead — modular boundaries kept in code, not in network.</p>
+      <div class="work-stats">
+        <div><span class="v">−60%</span><span class="k">deploy time</span></div>
+        <div><span class="v">3 svc</span><span class="k">merged</span></div>
+      </div>
+    </article>
+
+    <article class="work-card">
+      <div class="work-meta">
+        <span class="work-id">A.007</span>
+      </div>
+      <h3 class="work-title">IoT Build <span class="ital">Pipeline</span></h3>
+      <p class="work-body">GitLab + Jenkins CI/CD for IoT automation builds at ESAB India. AKS-hosted, multi-stage — firmware artifacts and software services in one reproducible flow.</p>
+      <div class="work-stats">
+        <div><span class="v">AKS</span><span class="k">platform</span></div>
+        <div><span class="v">GitLab</span><span class="k">+ Jenkins</span></div>
+      </div>
+    </article>
+
+    <article class="work-card">
+      <div class="work-meta">
+        <span class="work-id">A.008</span>
+      </div>
+      <h3 class="work-title">Monolith <span class="ital">→</span> Microservices</h3>
+      <p class="work-body">Cloud infrastructure architecture for a full monolith-to-microservices migration. CI/CD on GitLab + Jenkins, Python + Pytest automation frameworks for the new service surface.</p>
+      <div class="work-stats">
+        <div><span class="v">on-prem</span><span class="k">→ cloud</span></div>
+        <div><span class="v">Python</span><span class="k">automation</span></div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============== STACK ============== -->
+<section class="section" id="stack">
+  <div class="section-head">
+    <div class="section-marker">§ 04</div>
+    <h2 class="section-title">Stack &amp; Tooling<span class="caret">.</span></h2>
+    <div class="section-sub" style="max-width: 550px">Filled circles indicate depth.</div>
+  </div>
+
+  <div class="stack-grid">
+    <div class="stack-col">
+      <div class="stack-label">Containers &amp; Orchestration</div>
+      <ul class="stack-list">
+        <li><span class="dots" data-level="5"></span>Kubernetes</li>
+        <li><span class="dots" data-level="5"></span>AKS</li>
+        <li><span class="dots" data-level="4"></span>Docker</li>
+        <li><span class="dots" data-level="4"></span>Proxmox (VM)</li>
+      </ul>
+    </div>
+
+    <div class="stack-col">
+      <div class="stack-label">IaC &amp; Configuration</div>
+      <ul class="stack-list">
+        <li><span class="dots" data-level="5"></span>Terraform</li>
+        <li><span class="dots" data-level="5"></span>Ansible</li>
+        <li><span class="dots" data-level="4"></span>Helm</li>
+        <li><span class="dots" data-level="4"></span>ArgoCD</li>
+      </ul>
+    </div>
+
+    <div class="stack-col">
+      <div class="stack-label">CI/CD &amp; Build</div>
+      <ul class="stack-list">
+        <li><span class="dots" data-level="5"></span>GitLab CI</li>
+        <li><span class="dots" data-level="5"></span>Jenkins</li>
+        <li><span class="dots" data-level="4"></span>GitHub Actions</li>
+        <li><span class="dots" data-level="3"></span>Buildkite</li>
+      </ul>
+    </div>
+
+    <div class="stack-col">
+      <div class="stack-label">Clouds &amp; Infra</div>
+      <ul class="stack-list">
+        <li><span class="dots" data-level="5"></span>Azure</li>
+        <li><span class="dots" data-level="4"></span>AWS</li>
+        <li><span class="dots" data-level="3"></span>GCP</li>
+        <li><span class="dots" data-level="4"></span>Proxmox</li>
+        <li><span class="dots" data-level="3"></span>On-Prem (OpenStack)</li>
+      </ul>
+    </div>
+
+    <div class="stack-col">
+      <div class="stack-label">Languages</div>
+      <ul class="stack-list">
+        <li><span class="dots" data-level="5"></span>Python</li>
+        <li><span class="dots" data-level="5"></span>Bash</li>
+        <li><span class="dots" data-level="3"></span>Go</li>
+        <li><span class="dots" data-level="3"></span>JavaScript</li>
+      </ul>
+    </div>
+
+    <div class="stack-col">
+      <div class="stack-label">AI &amp; Automation</div>
+      <ul class="stack-list">
+        <li><span class="dots" data-level="4"></span>Local LLM (Ollama)</li>
+        <li><span class="dots" data-level="4"></span>AI Agents</li>
+        <li><span class="dots" data-level="4"></span>RAG Pipelines</li>
+        <li><span class="dots" data-level="3"></span>SLMs</li>
+        <li><span class="dots" data-level="4"></span>MCP Servers</li>
+      </ul>
+    </div>
+
+    <div class="stack-col">
+      <div class="stack-label">Observability</div>
+      <ul class="stack-list">
+        <li><span class="dots" data-level="4"></span>Prometheus</li>
+        <li><span class="dots" data-level="4"></span>Grafana</li>
+        <li><span class="dots" data-level="3"></span>Loki</li>
+        <li><span class="dots" data-level="3"></span>ELK</li>
+      </ul>
+    </div>
+
+    <div class="stack-col">
+      <div class="stack-label">Embedded &amp; Hardware</div>
+      <ul class="stack-list">
+        <li><span class="dots" data-level="4"></span>HiL Setups</li>
+        <li><span class="dots" data-level="3"></span>Firmware CI</li>
+        <li><span class="dots" data-level="3"></span>IoT Pipelines</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============== CONTACT ============== -->
+<section class="section section-contact" id="contact">
+  <div class="section-head">
+    <div class="section-marker">§ 05</div>
+    <h2 class="section-title">Contact<span class="caret">.</span></h2>
+    <div class="section-sub" style="max-width: 550px">Open to senior DevOps, platform, and infrastructure roles — full-time or contract. Happy to talk through AI-agent and embedded-automation work in detail.</div>
+  </div>
+
+  <a class="big-email" href="mailto:karthikpalani1710@gmail.com">
+    karthikpalani1710<span class="at">@</span>gmail.com
+    <span class="email-arrow">↗</span>
+  </a>
+
+  <div class="contact-grid">
+    <a class="contact-card" href="https://karthikpalani.com">
+      <span class="cc-label">Website</span>
+      <span class="cc-value">karthikpalani.com</span>
+      <span class="cc-arrow">↗</span>
+    </a>
+    <a class="contact-card" href="https://www.linkedin.com/in/karthik-palani/" target="_blank" rel="noopener">
+      <span class="cc-label">LinkedIn</span>
+      <span class="cc-value">in/karthik-palani</span>
+      <span class="cc-arrow">↗</span>
+    </a>
+    <a class="contact-card" href="https://github.com/karthik1710" target="_blank" rel="noopener">
+      <span class="cc-label">GitHub</span>
+      <span class="cc-value">github.com/karthik1710</span>
+      <span class="cc-arrow">↗</span>
+    </a>
+    <a class="contact-card" href="mailto:karthikpalani1710@gmail.com">
+      <span class="cc-label">Direct</span>
+      <span class="cc-value">karthikpalani1710@gmail.com</span>
+      <span class="cc-arrow">↗</span>
+    </a>
+  </div>
+</section>
+
+<script src="portfolio.js"></script>
 </body>
-
 </html>

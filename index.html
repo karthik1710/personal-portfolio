@@ -3,152 +3,590 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Karthik Palani — Senior DevOps Engineer</title>
+<title>Karthik Palani — DevOps Engineer building AI agents</title>
+<meta name="description" content="Karthik Palani — Senior DevOps Engineer and platform lead. Kubernetes, CI/CD, and production AI agents for code review, test orchestration, and project management." />
+<meta name="color-scheme" content="light dark" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&family=Newsreader:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Caveat:wght@400;500;600;700&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&family=Newsreader:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="portfolio.css?v=5" />
+<link rel="stylesheet" href="portfolio.css?v=7" />
 
 <style>
-  /* critical inline overrides for theme bg so cached external CSS can't override */
-  html[data-theme="light"]      { background-color: #f3eee2 !important; }
-  html[data-theme="light"] body { background-color: #f3eee2 !important; color: #181410 !important; }
-  html[data-theme="dark"]       { background-color: #15110d !important; }
-  html[data-theme="dark"] body  { background-color: #15110d !important; color: #f3eee2 !important; }
+  /* critical paint — set before external CSS lands so there is no flash */
+  html[data-theme="light"]      { background-color: #faf7ef; }
+  html[data-theme="light"] body { background-color: #faf7ef; color: #221f19; }
+  html[data-theme="dark"]       { background-color: #14120e; }
+  html[data-theme="dark"] body  { background-color: #14120e; color: #f0ece0; }
 </style>
 
 <script>
   (function(){
-    var t = localStorage.getItem("kp2-theme") || "light";
+    var t = localStorage.getItem("kp3-theme");
+    if (!t) t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
     document.documentElement.setAttribute("data-theme", t);
   })();
 </script>
 </head>
 <body>
 
-<div class="paper-grain"></div>
-<div class="scroll-progress" id="scrollProgress"></div>
+<!-- ============================================================
+     SKETCH FILTER DEFS — the whole hand-drawn look comes from here.
+     #rough displaces stroked edges so straight lines wobble like pen.
+     ============================================================ -->
+<svg class="svg-defs" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="rough" x="-6%" y="-6%" width="112%" height="112%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="4" seed="7" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="rough-fine" x="-6%" y="-6%" width="112%" height="112%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="19" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.2" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="rough-loose" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="4" seed="31" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
+
+<div class="canvas-weave" aria-hidden="true"></div>
+<div class="paper-grain" aria-hidden="true"></div>
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 
 <!-- ============== TOP BAR ============== -->
 <header class="topbar">
-  <a href="#top" class="logo">
-    <span class="mark">KP</span>
-    <span class="mark-sep">/</span>
-    <span class="mark-sub">Karthik Palani</span>
+  <a href="#top" class="logo" aria-label="Karthik Palani — top of page">
+    <span class="logo-badge">
+      <svg viewBox="0 0 40 40" width="26" height="26" aria-hidden="true">
+        <g filter="url(#rough-fine)" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+          <circle cx="20" cy="20" r="16"/>
+        </g>
+        <text x="20" y="26" text-anchor="middle" class="logo-initials">KP</text>
+      </svg>
+    </span>
+    <span class="logo-name">Karthik Palani</span>
   </a>
-  <nav class="topnav">
-    <a href="#currently"><span class="n">01</span>Currently</a>
-    <a href="#experience"><span class="n">02</span>Experience</a>
-    <a href="#work"><span class="n">03</span>Work</a>
-    <a href="#stack"><span class="n">04</span>Stack</a>
-    <a href="#contact"><span class="n">05</span>Contact</a>
+
+  <nav class="topnav" aria-label="Sections">
+    <a href="#currently" data-nav="currently"><span class="n">01</span>Currently</a>
+    <a href="#ai" data-nav="ai"><span class="n">02</span>AI Systems</a>
+    <a href="#experience" data-nav="experience"><span class="n">03</span>Experience</a>
+    <a href="#work" data-nav="work"><span class="n">04</span>Infrastructure</a>
+    <a href="#stack" data-nav="stack"><span class="n">05</span>Stack</a>
+    <a href="#contact" data-nav="contact"><span class="n">06</span>Contact</a>
   </nav>
+
   <div class="topbar-right">
-    <span class="clock" id="clock">— · IST</span>
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-      <svg viewBox="0 0 24 24" class="icon-sun" width="14" height="14"><circle cx="12" cy="12" r="4" fill="currentColor"/><g stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="12" y1="3" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="21"/><line x1="3" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="21" y2="12"/><line x1="5.5" y1="5.5" x2="6.9" y2="6.9"/><line x1="17.1" y1="17.1" x2="18.5" y2="18.5"/><line x1="5.5" y1="18.5" x2="6.9" y2="17.1"/><line x1="17.1" y1="6.9" x2="18.5" y2="5.5"/></g></svg>
-      <svg viewBox="0 0 24 24" class="icon-moon" width="14" height="14"><path d="M20 13.5A8 8 0 1 1 10.5 4a6.5 6.5 0 0 0 9.5 9.5z" fill="currentColor"/></svg>
+    <span class="clock" id="clock">—:— IST</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light and dark theme">
+      <svg viewBox="0 0 24 24" class="icon-sun" width="15" height="15" aria-hidden="true"><g filter="url(#rough-fine)" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><line x1="12" y1="2.6" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="21.4"/><line x1="2.6" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="21.4" y2="12"/><line x1="5.4" y1="5.4" x2="7" y2="7"/><line x1="17" y1="17" x2="18.6" y2="18.6"/><line x1="5.4" y1="18.6" x2="7" y2="17"/><line x1="17" y1="7" x2="18.6" y2="5.4"/></g></svg>
+      <svg viewBox="0 0 24 24" class="icon-moon" width="15" height="15" aria-hidden="true"><g filter="url(#rough-fine)" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M20.5 14.2A8.6 8.6 0 1 1 10.2 3.4a6.8 6.8 0 0 0 10.3 10.8z"/></g></svg>
     </button>
   </div>
 </header>
 
 <!-- ============== HERO ============== -->
 <section class="hero" id="top">
-  <div class="hero-name">Karthik <span class="name-ital">Palani</span><span class="name-stop">.</span></div>
+  <div class="hero-inner">
 
-  <h1 class="hero-title">
-    <span class="line">Senior DevOps</span>
-    <span class="line"><span class="ital">Engineer</span><svg class="underline" viewBox="0 0 400 14" preserveAspectRatio="none"><path d="M2 8 Q 100 2 200 6 T 398 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> &amp;</span>
-    <span class="line">Platform Lead.</span>
-  </h1>
+    <div class="hero-left">
+      <div class="hero-kicker">
+        <span class="kicker-mark">✎</span>
+        <span>Sketchbook — Chennai, India</span>
+        <span class="kicker-sep">·</span>
+        <span id="dateStamp">—</span>
+      </div>
 
-  <div class="hero-intro">
-    I build the infrastructure layer — pipelines, containers, and AI-augmented automation that lets engineering teams ship reliably and fast. <span id="heroYearsWord">Eight</span> years across cloud architecture, SRE, IoT, embedded, and now AI agents.
-  </div>
+      <h1 class="hero-name">
+        Karthik
+        <span class="name-row">
+          <span class="name-ital">Palani</span>
+          <svg class="name-underline" viewBox="0 0 420 20" preserveAspectRatio="none" aria-hidden="true">
+            <g filter="url(#rough)" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+              <path d="M6 12 C 90 4, 180 16, 268 8 S 396 6, 414 11"/>
+              <path d="M22 17 C 120 11, 230 19, 402 15" opacity=".45"/>
+            </g>
+          </svg>
+        </span>
+      </h1>
 
-  <div class="hero-meta">
-    <div class="meta-cell">
-      <div class="meta-label">Based in</div>
-      <div class="meta-value">Chennai, IN</div>
+      <p class="hero-role">
+        DevOps engineer who
+        <span class="mark-hl">builds AI agents</span>
+        for the boring parts of shipping software.
+      </p>
+
+      <p class="hero-intro">
+        I own the infrastructure layer — Kubernetes, pipelines, and hardware test rigs — and
+        increasingly the agents that run on top of it: autonomous code review, AI-executed
+        test suites, and project automation. <span id="heroYearsWord">Eight</span> years across
+        cloud architecture, SRE, IoT and embedded systems.
+      </p>
+
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#ai">
+          <span>See the AI work</span>
+          <svg viewBox="0 0 24 16" width="22" height="15" aria-hidden="true"><g filter="url(#rough-fine)" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8 H20"/><path d="M14 3 L20.5 8 L14 13"/></g></svg>
+        </a>
+        <a class="btn" href="mailto:karthikpalani1710@gmail.com">Get in touch</a>
+      </div>
+
+      <dl class="hero-meta">
+        <div class="meta-cell">
+          <dt>Currently</dt>
+          <dd>ESAB India <span class="now-dot" aria-hidden="true">●</span></dd>
+        </div>
+        <div class="meta-cell">
+          <dt>Experience</dt>
+          <dd id="metaYears">8.7 years</dd>
+        </div>
+        <div class="meta-cell">
+          <dt>Focus</dt>
+          <dd>AI agents · K8s</dd>
+        </div>
+        <div class="meta-cell">
+          <dt>Status</dt>
+          <dd>Open to roles</dd>
+        </div>
+      </dl>
     </div>
-    <div class="meta-cell">
-      <div class="meta-label">Currently</div>
-      <div class="meta-value">ESAB India Ltd <span class="now-dot">●</span></div>
-    </div>
-    <div class="meta-cell">
-      <div class="meta-label">Experience</div>
-      <div class="meta-value" id="metaYears">8.7 years</div>
-    </div>
-    <div class="meta-cell">
-      <div class="meta-label">Email</div>
-      <div class="meta-value"><a href="mailto:karthikpalani1710@gmail.com">karthikpalani1710<wbr/>@gmail.com</a></div>
-    </div>
+
+    <!-- ---------- AVATAR ---------- -->
+    <aside class="hero-right">
+      <figure class="avatar-frame sketch-box" data-tilt="1.4">
+        <span class="tape tape-tl" aria-hidden="true"></span>
+        <span class="tape tape-br" aria-hidden="true"></span>
+
+        <div class="avatar-stage">
+          <!-- Drop a real photo at assets/avatar.jpg and it replaces the drawing,
+               already filtered to match the ink-on-paper look. -->
+          <img class="avatar-photo" id="avatarPhoto" src="assets/avatar.jpg" alt="Karthik Palani" hidden />
+
+          <svg class="avatar-ink" id="avatarInk" viewBox="0 0 200 226" role="img" aria-label="Ink sketch portrait of Karthik Palani">
+            <g filter="url(#rough-fine)" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <!-- shoulders -->
+              <path d="M16 220 C 24 182, 60 168, 100 168 C 140 168, 176 182, 184 220" stroke-width="2.6"/>
+              <path d="M84 152 C 86 164, 92 168, 100 168 C 108 168, 114 164, 116 152" stroke-width="2.2"/>
+              <!-- collar -->
+              <path d="M82 170 C 90 182, 110 182, 118 170" stroke-width="1.8" opacity=".8"/>
+              <!-- head -->
+              <path d="M100 40 C 128 40, 148 64, 148 98 C 148 132, 128 156, 100 156 C 72 156, 52 132, 52 98 C 52 64, 72 40, 100 40 Z" stroke-width="2.6"/>
+              <!-- hair -->
+              <path d="M52 92 C 50 54, 74 34, 100 34 C 128 34, 152 50, 148 94 C 143 71, 129 60, 110 57 C 88 53, 65 64, 56 92 Z" stroke-width="2.4" class="ink-fill-hair"/>
+              <path d="M60 74 C 74 60, 96 56, 116 62" stroke-width="1.4" opacity=".55"/>
+              <path d="M66 66 C 82 55, 104 53, 122 60" stroke-width="1.2" opacity=".4"/>
+              <!-- ears -->
+              <path d="M52 96 C 43 93, 41 110, 52 116" stroke-width="2"/>
+              <path d="M148 96 C 157 93, 159 110, 148 116" stroke-width="2"/>
+              <!-- brows -->
+              <path d="M72 88 C 79 82, 90 82, 96 87" stroke-width="2.4"/>
+              <path d="M104 87 C 110 82, 121 82, 128 88" stroke-width="2.4"/>
+              <!-- eyes -->
+              <path d="M74 100 C 79 94, 89 94, 94 100" stroke-width="2.2"/>
+              <path d="M106 100 C 111 94, 121 94, 126 100" stroke-width="2.2"/>
+              <circle cx="84" cy="100" r="2.6" fill="currentColor" stroke="none"/>
+              <circle cx="116" cy="100" r="2.6" fill="currentColor" stroke="none"/>
+              <!-- nose -->
+              <path d="M100 100 C 99 110, 96 118, 95 122 C 95 126, 103 127, 107 123" stroke-width="2"/>
+              <!-- mouth -->
+              <path d="M85 137 C 93 144, 108 144, 116 136" stroke-width="2.4"/>
+              <!-- stubble hatching -->
+              <g stroke-width="1" opacity=".35">
+                <path d="M74 126 L78 133"/><path d="M80 130 L84 138"/><path d="M120 130 L116 138"/>
+                <path d="M126 126 L122 133"/><path d="M92 148 L94 153"/><path d="M108 148 L106 153"/>
+              </g>
+              <!-- cheek shading -->
+              <g stroke-width="1" opacity=".22">
+                <path d="M64 108 L70 120"/><path d="M60 114 L66 126"/>
+                <path d="M136 108 L130 120"/><path d="M140 114 L134 126"/>
+              </g>
+            </g>
+          </svg>
+        </div>
+
+        <figcaption class="avatar-cap">
+          <span class="cap-hand">that's me, roughly</span>
+        </figcaption>
+      </figure>
+
+      <div class="avatar-note">
+        <svg class="note-arrow" viewBox="0 0 90 60" aria-hidden="true">
+          <g filter="url(#rough-fine)" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M84 8 C 60 6, 30 16, 16 46"/>
+            <path d="M10 34 L15 48 L29 44"/>
+          </g>
+        </svg>
+        <p class="note-hand"><span id="noteYears">8</span> yrs of pipelines,<br/>clusters &amp; now agents</p>
+      </div>
+    </aside>
+
   </div>
 
   <div class="hero-foot">
-    <span class="scroll-cue">↓ scroll to read</span>
+    <span class="scroll-cue">
+      <svg viewBox="0 0 16 34" width="13" height="28" aria-hidden="true"><g filter="url(#rough-fine)" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2 V27"/><path d="M2 21 L8 29 L14 21"/></g></svg>
+      scroll
+    </span>
+    <span class="hero-foot-sig">— turn the page</span>
   </div>
-</section>
-
-<!-- ============== INDEX ============== -->
-<section class="contents">
-  <div class="contents-rail">CONTENTS</div>
-  <ol class="toc">
-    <li><a href="#currently"><span class="num">01</span><span class="title">Currently</span><span class="meta">↘</span></a></li>
-    <li><a href="#experience"><span class="num">02</span><span class="title">Experience</span><span class="meta">↘</span></a></li>
-    <li><a href="#work"><span class="num">03</span><span class="title">Work</span><span class="meta">↘</span></a></li>
-    <li><a href="#stack"><span class="num">04</span><span class="title">Stack and Tooling</span><span class="meta">↘</span></a></li>
-    <li><a href="#contact"><span class="num">05</span><span class="title">Contact</span><span class="meta">↘</span></a></li>
-  </ol>
 </section>
 
 <!-- ============== CURRENTLY ============== -->
-<section class="section section-currently" id="currently">
+<section class="section" id="currently">
+  <div class="paper-edge" aria-hidden="true">
+    <svg viewBox="0 0 1200 9" preserveAspectRatio="none"><path d="M0 5 C 40 2, 80 8, 130 4 S 220 7, 280 3 S 370 8, 430 5 S 520 1, 580 6 S 670 8, 730 3 S 830 7, 890 4 S 990 2, 1050 7 S 1150 4, 1200 5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>
+  </div>
+  <span class="coffee-ring" style="top: 40px; right: 6%;" aria-hidden="true"></span>
+
   <div class="section-head">
-    <div class="section-marker">§ 01</div>
-    <h2 class="section-title">Currently<span class="caret">.</span></h2>
-    <div class="section-sub" style="max-width: 550px">What I'm focused on right now.</div>
+    <div class="section-marker"><span class="marker-num">01</span><span class="marker-rule" aria-hidden="true"></span></div>
+    <div>
+      <h2 class="section-title">Currently<span class="caret">.</span></h2>
+      <p class="section-sub">What is actually on my desk right now — not a wish list.</p>
+    </div>
   </div>
 
   <div class="now-grid">
-    <article class="now-card big">
-      <div class="now-tag">A. Day job</div>
-      <p>Leading a <span class="hl">full-stack &amp; DevOps team</span> at <strong>ESAB India</strong>, owning end-to-end infrastructure for a large-scale project.</p>
+    <article class="now-card sketch-box big">
+      <div class="now-tag">A · Day job</div>
+      <p>Leading a <span class="mark-hl">full-stack &amp; DevOps team</span> at <strong>ESAB India</strong>, owning end-to-end infrastructure for a large-scale industrial platform.</p>
     </article>
 
-    <article class="now-card">
-      <div class="now-tag">B. AI</div>
-      <p>AI agents for <strong>code review</strong>, <strong>project management</strong>, and <strong>test orchestration</strong>.</p>
+    <article class="now-card sketch-box">
+      <div class="now-tag">B · AI</div>
+      <p>Shipping agents for <strong>code review</strong>, <strong>test execution</strong> and <strong>project management</strong> — running in CI, not in a notebook.</p>
     </article>
 
-    <article class="now-card">
-      <div class="now-tag">C. Embedded</div>
-      <p><strong>HiL</strong> (Hardware-in-the-Loop) embedded test setups and automation infrastructure.</p>
+    <article class="now-card sketch-box">
+      <div class="now-tag">C · Embedded</div>
+      <p><strong>Hardware-in-the-Loop</strong> test rigs, wired into the same pipelines as the software.</p>
     </article>
 
-    <article class="now-card">
-      <div class="now-tag">D. Platforms</div>
-      <p><strong>Kubernetes</strong>, container orchestration, and <strong>VM</strong> platforms — AKS and cluster-managed workloads.</p>
+    <article class="now-card sketch-box big">
+      <div class="now-tag">D · Platforms</div>
+      <p><strong>Kubernetes</strong>, Helm and VM estates — AKS in the cloud, k3s and Proxmox on the floor.</p>
     </article>
 
-    <article class="now-card wide">
-      <div class="now-tag">E. Philosophy</div>
-      <p>I care about the <span class="hl">compounding return of small, boring automation</span> — the runbook that prevents a 3am page, the pipeline that makes a Friday deploy feel safe, the IaC module a new joiner can understand in 10 minutes.</p>
+    <article class="now-card sketch-box big">
+      <div class="now-tag">F · In the open</div>
+      <p>Two of the agents are public on <a class="link-pen" href="https://github.com/karthik1710" target="_blank" rel="noopener">GitHub</a>. The platform work mostly isn't mine to publish.</p>
     </article>
+
+    <article class="now-card sketch-box wide">
+      <div class="now-tag">E · Philosophy</div>
+      <p>I care about the <span class="mark-hl">compounding return of small, boring automation</span> — the runbook that prevents a 3am page, the pipeline that makes a Friday deploy feel safe, the Helm chart a new joiner can read in ten minutes.</p>
+      <span class="doodle-star" aria-hidden="true">
+        <svg viewBox="0 0 40 40" width="34" height="34"><g filter="url(#rough-fine)" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M20 5 L23.6 15.6 L34.8 15.8 L25.8 22.6 L29.1 33.4 L20 26.8 L10.9 33.4 L14.2 22.6 L5.2 15.8 L16.4 15.6 Z"/></g></svg>
+      </span>
+    </article>
+  </div>
+</section>
+
+<!-- ============== AI SYSTEMS ============== -->
+<section class="section section-ai" id="ai">
+  <div class="paper-edge" aria-hidden="true">
+    <svg viewBox="0 0 1200 9" preserveAspectRatio="none"><path d="M0 4 C 50 8, 100 2, 160 6 S 250 3, 310 7 S 400 2, 470 5 S 560 8, 620 4 S 710 2, 780 6 S 880 3, 940 7 S 1050 4, 1120 3 S 1180 6, 1200 4" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>
+  </div>
+
+  <div class="section-head">
+    <div class="section-marker"><span class="marker-num">02</span><span class="marker-rule" aria-hidden="true"></span></div>
+    <div>
+      <h2 class="section-title">AI <span class="title-ital">Systems</span><span class="caret">.</span></h2>
+      <p class="section-sub">
+        Production agents I designed and shipped. Not demos — these run against real
+        merge requests, real test suites and real hardware, on a schedule, with metrics.
+      </p>
+      <p class="section-note note-hand">↓ the part I'd want to talk about</p>
+    </div>
+
+    <div class="section-art" aria-hidden="true">
+      <svg viewBox="0 0 130 118" width="118" height="107">
+        <g filter="url(#rough-fine)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M65 33 V19"/>
+          <circle cx="65" cy="14" r="5"/>
+          <path d="M34 33 H96 a9 9 0 0 1 9 9 V85 a9 9 0 0 1 -9 9 H34 a9 9 0 0 1 -9 -9 V42 a9 9 0 0 1 9 -9 Z"/>
+          <path d="M25 53 H15 a4 4 0 0 0 -4 4 V70 a4 4 0 0 0 4 4 H25"/>
+          <path d="M105 53 H115 a4 4 0 0 1 4 4 V70 a4 4 0 0 1 -4 4 H105"/>
+          <circle cx="50" cy="55" r="8"/>
+          <circle cx="80" cy="55" r="8"/>
+          <path d="M46 71 H84 V83 H46 Z"/>
+          <path d="M59 71 V83"/>
+          <path d="M71 71 V83"/>
+        </g>
+        <g filter="url(#rough-fine)" fill="currentColor" stroke="none">
+          <circle cx="50" cy="55" r="3"/>
+          <circle cx="80" cy="55" r="3"/>
+        </g>
+        <g filter="url(#rough-fine)" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+          <path d="M113 20 V30 M108 25 H118"/>
+          <path d="M17 98 V105 M13.5 101.5 H20.5"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="ai-list">
+
+    <!-- ---------- 01 CodeSentinel ---------- -->
+    <article class="ai-entry sketch-box">
+      <header class="ai-head">
+        <span class="ai-index">01</span>
+        <div class="ai-heading">
+          <h3 class="ai-name">CodeSentinel</h3>
+          <p class="ai-tagline">Autonomous code review that learns from its own history</p>
+        </div>
+        <a class="ai-repo" href="https://github.com/karthik1710/codesentinel" target="_blank" rel="noopener">
+          <span>source</span>
+          <svg viewBox="0 0 14 14" width="11" height="11" aria-hidden="true"><g filter="url(#rough-fine)" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 11 L11 3"/><path d="M5 3 H11 V9"/></g></svg>
+        </a>
+      </header>
+
+      <div class="ai-body">
+        <p class="ai-lede">
+          A review agent that sits on GitLab merge requests. It parses the unified diff,
+          decides where it needs more context, and goes and gets it — pulling whole files,
+          searching the codebase semantically, and recalling how similar changes were
+          reviewed before. Findings land as inline comments with one-click GitLab suggestion
+          blocks, deduplicated across review iterations so it does not repeat itself when a
+          developer pushes a fix.
+        </p>
+
+        <ul class="ai-caps">
+          <li>
+            <span class="cap-k">Episodic memory</span>
+            <span class="cap-v">Stores past reviews and developer responses, then retrieves the relevant ones — feedback stays consistent across MRs instead of resetting every run.</span>
+          </li>
+          <li>
+            <span class="cap-k">Agentic tool use</span>
+            <span class="cap-v">Claude decides when to fetch a full file, run a codebase search, or query memory — rather than being handed a fixed context window and guessing.</span>
+          </li>
+          <li>
+            <span class="cap-k">Thread lifecycle</span>
+            <span class="cap-v">Answers follow-up questions in a discussion thread and auto-resolves it once the issue is genuinely addressed.</span>
+          </li>
+          <li>
+            <span class="cap-k">Two run modes</span>
+            <span class="cap-v">Long-running service polling a GitLab group for MRs where the bot is assigned reviewer, or a single-shot CLI call for pipeline integration.</span>
+          </li>
+          <li>
+            <span class="cap-k">Built to stay up</span>
+            <span class="cap-v">SQLite state so restarts never double-review, thread-pool concurrency, Prometheus metrics, FastAPI dashboard, multi-arch Docker images.</span>
+          </li>
+          <li>
+            <span class="cap-k">Swappable brain</span>
+            <span class="cap-v">Provider factory behind the reviewer — the model is an env var, not a rewrite.</span>
+          </li>
+        </ul>
+      </div>
+
+      <footer class="ai-foot">
+        <div class="chip-row">
+          <span class="chip">Python 3.10+</span>
+          <span class="chip">Claude Sonnet</span>
+          <span class="chip">Tool calling</span>
+          <span class="chip">GitLab API</span>
+          <span class="chip">SQLite</span>
+          <span class="chip">FastAPI</span>
+          <span class="chip">Prometheus</span>
+          <span class="chip">Docker</span>
+        </div>
+      </footer>
+    </article>
+
+    <!-- ---------- 02 TestFlow ---------- -->
+    <article class="ai-entry sketch-box">
+      <header class="ai-head">
+        <span class="ai-index">02</span>
+        <div class="ai-heading">
+          <h3 class="ai-name">TestFlow</h3>
+          <p class="ai-tagline">Manual test cases, executed by an agent, with no scripts written</p>
+        </div>
+        <a class="ai-repo" href="https://github.com/karthik1710/testflow" target="_blank" rel="noopener">
+          <span>source</span>
+          <svg viewBox="0 0 14 14" width="11" height="11" aria-hidden="true"><g filter="url(#rough-fine)" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 11 L11 3"/><path d="M5 3 H11 V9"/></g></svg>
+        </a>
+      </header>
+
+      <div class="ai-body">
+        <p class="ai-lede">
+          QA writes a test case in plain English in TestRail. TestFlow reads it, works out
+          what the steps mean, drives a real Chromium browser through them with Playwright,
+          validates the outcome, captures screenshots, and writes pass/fail back to
+          TestRail. Nobody writes a selector. Nobody sits and watches it run.
+        </p>
+
+        <div class="flow-strip" aria-label="Pipeline: TestRail to AI to Playwright to results">
+          <span class="flow-node">TestRail<em>plain-English cases</em></span>
+          <span class="flow-arrow" aria-hidden="true">
+            <svg viewBox="0 0 46 14" width="42" height="13"><g filter="url(#rough-fine)" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7 H40"/><path d="M34 2.5 L41 7 L34 11.5"/></g></svg>
+          </span>
+          <span class="flow-node">Agent<em>interprets intent</em></span>
+          <span class="flow-arrow" aria-hidden="true">
+            <svg viewBox="0 0 46 14" width="42" height="13"><g filter="url(#rough-fine)" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7 H40"/><path d="M34 2.5 L41 7 L34 11.5"/></g></svg>
+          </span>
+          <span class="flow-node">Playwright<em>drives the browser</em></span>
+          <span class="flow-arrow" aria-hidden="true">
+            <svg viewBox="0 0 46 14" width="42" height="13"><g filter="url(#rough-fine)" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7 H40"/><path d="M34 2.5 L41 7 L34 11.5"/></g></svg>
+          </span>
+          <span class="flow-node">Results<em>back into TestRail</em></span>
+        </div>
+
+        <ul class="ai-caps">
+          <li>
+            <span class="cap-k">Vector memory</span>
+            <span class="cap-v">Remembers how a step resolved last time and replays it — cutting model calls by roughly 70–80% on repeat runs, which is what makes nightly execution affordable.</span>
+          </li>
+          <li>
+            <span class="cap-k">Degrades gracefully</span>
+            <span class="cap-v">With no model key configured it falls back to rule-based parsing (regex plus HTML inspection) instead of failing the run.</span>
+          </li>
+          <li>
+            <span class="cap-k">Beyond the browser</span>
+            <span class="cap-v">Targets web HMI, PLC endpoints and GitLab — the same case format drives industrial and software surfaces.</span>
+          </li>
+          <li>
+            <span class="cap-k">Evidence trail</span>
+            <span class="cap-v">Full execution history, screenshots and timing metrics per step, streamed live over WebSocket while it runs.</span>
+          </li>
+        </ul>
+      </div>
+
+      <footer class="ai-foot">
+        <div class="chip-row">
+          <span class="chip">Python</span>
+          <span class="chip">Playwright</span>
+          <span class="chip">Vector store</span>
+          <span class="chip">TestRail API</span>
+          <span class="chip">WebSocket</span>
+          <span class="chip">GPT-4o-mini</span>
+        </div>
+      </footer>
+    </article>
+
+    <!-- ---------- 03 PM-Agent ---------- -->
+    <article class="ai-entry sketch-box">
+      <header class="ai-head">
+        <span class="ai-index">03</span>
+        <div class="ai-heading">
+          <h3 class="ai-name">PM-Agent</h3>
+          <p class="ai-tagline">Project management without the status-ping tax</p>
+        </div>
+        <span class="ai-repo is-private">internal</span>
+      </header>
+
+      <div class="ai-body">
+        <p class="ai-lede">
+          An agent wired into the issue tracker and the pipelines. It follows tasks across
+          boards, notices when something has quietly stalled, correlates it against build
+          and deploy state, and raises the blocker — so the standup is about decisions
+          rather than reading tickets aloud.
+        </p>
+
+        <ul class="ai-caps">
+          <li>
+            <span class="cap-k">MCP tooling</span>
+            <span class="cap-v">Exposes tracker, repo and pipeline access as Model Context Protocol servers, so the same tools are reusable by every other agent I run.</span>
+          </li>
+          <li>
+            <span class="cap-k">Runs locally</span>
+            <span class="cap-v">Local LLM inference for anything touching internal project data — nothing sensitive leaves the network.</span>
+          </li>
+          <li>
+            <span class="cap-k">Blocker detection</span>
+            <span class="cap-v">Flags stale work and cross-team dependencies from activity patterns rather than waiting for someone to escalate.</span>
+          </li>
+        </ul>
+      </div>
+
+      <footer class="ai-foot">
+        <div class="chip-row">
+          <span class="chip">MCP servers</span>
+          <span class="chip">Local LLM</span>
+          <span class="chip">Ollama</span>
+          <span class="chip">Python</span>
+        </div>
+      </footer>
+    </article>
+
+    <!-- ---------- 04 Platform ---------- -->
+    <article class="ai-entry sketch-box is-compact">
+      <header class="ai-head">
+        <span class="ai-index">04</span>
+        <div class="ai-heading">
+          <h3 class="ai-name">The layer underneath</h3>
+          <p class="ai-tagline">MCP servers, RAG indexes and local inference the agents share</p>
+        </div>
+        <span class="ai-repo is-private">internal</span>
+      </header>
+
+      <div class="ai-body">
+        <p class="ai-lede">
+          Three agents in production means one shared substrate, not three copies of it:
+          MCP servers that wrap internal systems once, a retrieval index over repositories
+          and engineering docs, self-hosted models for anything confidential, and the same
+          observability every other service on the platform gets.
+        </p>
+
+        <ul class="ai-caps two-up">
+          <li><span class="cap-k">MCP servers</span><span class="cap-v">One tool surface, reused by every agent.</span></li>
+          <li><span class="cap-k">RAG pipelines</span><span class="cap-v">Repo and doc retrieval over internal patterns.</span></li>
+          <li><span class="cap-k">Local + SLM inference</span><span class="cap-v">Self-hosted models where data cannot leave.</span></li>
+          <li><span class="cap-k">Agent observability</span><span class="cap-v">Token spend, latency and failure rate on the same Grafana boards as the clusters.</span></li>
+        </ul>
+      </div>
+
+      <footer class="ai-foot">
+        <div class="chip-row">
+          <span class="chip">MCP</span>
+          <span class="chip">RAG</span>
+          <span class="chip">Ollama</span>
+          <span class="chip">SLMs</span>
+          <span class="chip">Grafana</span>
+        </div>
+      </footer>
+    </article>
+
   </div>
 </section>
 
 <!-- ============== EXPERIENCE ============== -->
 <section class="section" id="experience">
+  <div class="paper-edge" aria-hidden="true">
+    <svg viewBox="0 0 1200 9" preserveAspectRatio="none"><path d="M0 6 C 60 3, 120 7, 190 4 S 280 8, 350 5 S 440 2, 500 6 S 600 3, 670 7 S 760 4, 830 2 S 930 7, 1000 5 S 1120 3, 1200 6" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>
+  </div>
+
   <div class="section-head">
-    <div class="section-marker">§ 02</div>
-    <h2 class="section-title">Experience<span class="caret">.</span></h2>
-    <div class="section-sub" style="max-width: 550px">Six roles across <span id="expSubYearsWord">eight</span> years — healthcare operations, independent cloud &amp; DevOps consulting, SRE, DevOps, and now infrastructure leadership.</div>
+    <div class="section-marker"><span class="marker-num">03</span><span class="marker-rule" aria-hidden="true"></span></div>
+    <div>
+      <h2 class="section-title">Experience<span class="caret">.</span></h2>
+      <p class="section-sub">
+        Six roles over <span id="expSubYearsWord">eight</span> years — healthcare operations,
+        freelance cloud architecture, SRE, DevOps, and now infrastructure leadership.
+      </p>
+    </div>
+
+    <div class="section-art" aria-hidden="true">
+      <svg viewBox="0 0 120 120" width="104" height="104">
+        <g filter="url(#rough-fine)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <!-- a stack of pages, oldest at the back -->
+          <path d="M22 34 H82 V104 H22 Z"/>
+          <path d="M30 26 H90 V96"/>
+          <path d="M38 18 H98 V88"/>
+          <!-- ruled lines on the front page -->
+          <path d="M31 50 H73" opacity=".7"/>
+          <path d="M31 62 H73" opacity=".7"/>
+          <path d="M31 74 H61" opacity=".7"/>
+          <path d="M31 86 H68" opacity=".7"/>
+        </g>
+      </svg>
+    </div>
   </div>
 
   <div class="exp-list">
+
     <article class="exp-row current">
       <div class="exp-year">
         <div class="y-from">2024</div>
@@ -156,194 +594,247 @@
         <div class="y-tag">CURRENT</div>
       </div>
       <div class="exp-main">
-        <div class="exp-role">Senior DevOps Engineer</div>
+        <h3 class="exp-role">Senior DevOps Engineer</h3>
         <div class="exp-company">ESAB India Limited <span class="exp-loc">· Chennai</span></div>
-        <p class="exp-desc">End-to-end infrastructure ownership for a large-scale project. Leading a full-stack &amp; DevOps team, building HiL embedded test setups, and developing micro AI agents — MCP servers, CodeSentinel, PM-Agent, TestFlow Pro.</p>
-        <div class="exp-tags">
-          <span>Kubernetes</span><span>HiL Automation</span><span>RAG · LLMs</span><span>MCP</span><span>Team Lead</span>
-        </div>
+        <p class="exp-desc">
+          End-to-end infrastructure ownership for a large-scale industrial platform. Leading a
+          full-stack and DevOps team, standing up Hardware-in-the-Loop test rigs, and designing
+          the AI agents above — CodeSentinel, TestFlow and PM-Agent — plus the MCP and retrieval
+          layer they share.
+        </p>
+        <div class="exp-tags"><span>Kubernetes</span><span>HiL automation</span><span>RAG · LLMs</span><span>MCP</span><span>Team lead</span></div>
       </div>
     </article>
 
     <article class="exp-row">
-      <div class="exp-year">
-        <div class="y-from">2023</div>
-        <div class="y-to">— 2024</div>
-      </div>
+      <div class="exp-year"><div class="y-from">2023</div><div class="y-to">— 2024</div></div>
       <div class="exp-main">
-        <div class="exp-role">Senior DevOps Engineer</div>
+        <h3 class="exp-role">Senior DevOps Engineer</h3>
         <div class="exp-company">Ebot AI IT Solutions <span class="exp-loc">· Chennai</span></div>
-        <p class="exp-desc">Cluster migrations across on-premise and cloud infrastructure. Hands-on with IaC and Ansible for provisioning + configuration. Managed full containerized dev and production environments on Kubernetes.</p>
-        <div class="exp-tags">
-          <span>Kubernetes</span><span>Ansible</span><span>Terraform</span><span>GitLab CI</span><span>Jenkins</span><span>Migrations</span>
-        </div>
+        <p class="exp-desc">
+          Cluster migrations between on-premise and cloud. Built out a library of production
+          Helm deployments — Odoo, ERPNext, Supabase, Zitadel, Airbyte, Spark, Longhorn storage,
+          Elasticsearch and the kube-prometheus stack — and ran the containerised dev and
+          production estates on top of them.
+        </p>
+        <div class="exp-tags"><span>Kubernetes</span><span>Helm</span><span>Ansible</span><span>Terraform</span><span>GitLab CI</span><span>Migrations</span></div>
       </div>
     </article>
 
     <article class="exp-row">
-      <div class="exp-year">
-        <div class="y-from">2022</div>
-        <div class="y-to">— 2023</div>
-      </div>
+      <div class="exp-year"><div class="y-from">2022</div><div class="y-to">— 2023</div></div>
       <div class="exp-main">
-        <div class="exp-role">DevOps Engineer</div>
+        <h3 class="exp-role">DevOps Engineer</h3>
         <div class="exp-company">Motherson Technology Services <span class="exp-loc">· Client: ESAB India</span></div>
-        <p class="exp-desc">Managed AKS clusters and Azure resources end-to-end. Built and maintained CI/CD pipelines on GitLab and Jenkins, including IoT automation builds.</p>
-        <div class="exp-tags">
-          <span>AKS</span><span>Azure</span><span>GitLab CI</span><span>Jenkins</span><span>IoT</span>
-        </div>
+        <p class="exp-desc">
+          Managed AKS clusters and the surrounding Azure estate end to end. Built and maintained
+          CI/CD on GitLab and Jenkins, including the IoT firmware build pipelines.
+        </p>
+        <div class="exp-tags"><span>AKS</span><span>Azure</span><span>GitLab CI</span><span>Jenkins</span><span>IoT</span></div>
       </div>
     </article>
 
     <article class="exp-row">
-      <div class="exp-year">
-        <div class="y-from">2019</div>
-        <div class="y-to">— 2022</div>
-      </div>
+      <div class="exp-year"><div class="y-from">2019</div><div class="y-to">— 2022</div></div>
       <div class="exp-main">
-        <div class="exp-role">SRE Engineer</div>
+        <h3 class="exp-role">SRE Engineer</h3>
         <div class="exp-company">Xmedia Solutions <span class="exp-loc">· Chennai</span></div>
-        <p class="exp-desc">Full-lifecycle CRM development and deployment on Odoo — dev through production. Managed on-premise cluster infrastructure provisioning and ongoing maintenance.</p>
+        <p class="exp-desc">
+          Full-lifecycle CRM development and deployment on Odoo, dev through production, plus
+          provisioning and maintenance of the on-premise cluster it ran on.
+        </p>
+        <div class="exp-tags"><span>Odoo</span><span>On-prem</span><span>Docker</span><span>Linux</span></div>
       </div>
     </article>
 
     <article class="exp-row">
-      <div class="exp-year">
-        <div class="y-from">2018</div>
-        <div class="y-to">— 2019</div>
-      </div>
+      <div class="exp-year"><div class="y-from">2018</div><div class="y-to">— 2019</div></div>
       <div class="exp-main">
-        <div class="exp-role">DevOps &amp; Cloud Architect</div>
+        <h3 class="exp-role">DevOps &amp; Cloud Architect</h3>
         <div class="exp-company">Freelance <span class="exp-loc">· Remote</span></div>
-        <p class="exp-desc">Architected cloud infrastructure for monolith-to-microservices migrations. Built CI/CD pipelines on GitLab and Jenkins, plus Python + Pytest automation frameworks.</p>
-        <div class="exp-tags">
-          <span>GitLab</span><span>Jenkins</span><span>Python</span><span>Pytest</span><span>Microservices</span>
-        </div>
+        <p class="exp-desc">
+          Architected cloud infrastructure for monolith-to-microservices migrations. Built the
+          CI/CD on GitLab and Jenkins, and the Python + Pytest automation frameworks that
+          covered the new service surface.
+        </p>
+        <div class="exp-tags"><span>GitLab</span><span>Jenkins</span><span>Python</span><span>Pytest</span><span>Microservices</span></div>
       </div>
     </article>
 
     <article class="exp-row">
-      <div class="exp-year">
-        <div class="y-from">2017</div>
-        <div class="y-to">— 2018</div>
-      </div>
+      <div class="exp-year"><div class="y-from">2017</div><div class="y-to">— 2018</div></div>
       <div class="exp-main">
-        <div class="exp-role">HC &amp; Insurance Ops</div>
+        <h3 class="exp-role">Healthcare &amp; Insurance Operations</h3>
         <div class="exp-company">NTT Data Services <span class="exp-loc">· Chennai</span></div>
-        <p class="exp-desc">Operations team member in Healthcare Process and Adjudication. First exposure to large-scale enterprise workflows and cross-functional process management.</p>
-        <div class="exp-tags">
-          <span>Healthcare IT</span><span>Operations</span><span>Adjudication</span>
-        </div>
+        <p class="exp-desc">
+          Healthcare process and claims adjudication. Where I first saw how much of an
+          enterprise runs on undocumented manual steps — which is more or less why I ended
+          up automating things for a living.
+        </p>
+        <div class="exp-tags"><span>Healthcare IT</span><span>Operations</span><span>Adjudication</span></div>
       </div>
     </article>
+
   </div>
 </section>
 
-<!-- ============== WORK ============== -->
-<section class="section section-work" id="work">
+<!-- ============== INFRASTRUCTURE WORK ============== -->
+<section class="section" id="work">
+  <div class="paper-edge" aria-hidden="true">
+    <svg viewBox="0 0 1200 9" preserveAspectRatio="none"><path d="M0 3 C 70 7, 140 3, 210 6 S 300 2, 380 5 S 470 8, 540 4 S 640 6, 710 2 S 810 5, 880 7 S 990 3, 1060 5 S 1160 7, 1200 3" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>
+  </div>
+
   <div class="section-head">
-    <div class="section-marker">§ 03</div>
-    <h2 class="section-title">Work<span class="caret">.</span></h2>
-    <div class="section-sub" style="max-width: 551px">Production AI agents, embedded test infrastructure, system design, and cloud architecture — shipped at ESAB India and in earlier roles.</div>
+    <div class="section-marker"><span class="marker-num">04</span><span class="marker-rule" aria-hidden="true"></span></div>
+    <div>
+      <h2 class="section-title">Infrastructure<span class="caret">.</span></h2>
+      <p class="section-sub">
+        The platform work underneath — clusters, pipelines, migrations and test rigs.
+        Most of it lives in private repositories, so this is the shape rather than the source.
+      </p>
+    </div>
+
+    <div class="section-art" aria-hidden="true">
+      <svg viewBox="0 0 148 112" width="132" height="100">
+        <g filter="url(#rough-fine)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <!-- control plane -->
+          <path d="M56 6 H100 V32 H56 Z"/>
+          <path d="M63 14 H93" opacity=".7"/>
+          <path d="M63 22 H84" opacity=".7"/>
+          <!-- links down to the workers -->
+          <path d="M78 32 V46"/>
+          <path d="M20 46 H130"/>
+          <path d="M20 46 V60"/>
+          <path d="M78 46 V60"/>
+          <path d="M130 46 V60"/>
+          <!-- worker nodes -->
+          <path d="M4 60 H36 V90 H4 Z"/>
+          <path d="M62 60 H94 V90 H62 Z"/>
+          <path d="M114 60 H146 V90 H114 Z"/>
+          <path d="M10 70 H30 M10 78 H24" opacity=".7"/>
+          <path d="M68 70 H88 M68 78 H82" opacity=".7"/>
+          <path d="M120 70 H140 M120 78 H134" opacity=".7"/>
+          <!-- desk line -->
+          <path d="M8 102 H140" opacity=".6"/>
+        </g>
+      </svg>
+    </div>
   </div>
 
   <div class="work-grid">
 
-    <article class="work-card">
-      <div class="work-meta">
-        <span class="work-id">A.001</span>
-        <span class="work-dot">●</span>
-      </div>
-      <h3 class="work-title">CodeSentinel<span class="work-sub">— an AI code review framework</span></h3>
-      <p class="work-body">An AI code review framework that watches every pull request: indexes the repo, runs RAG against internal patterns, flags risky changes, and enforces team standards — integrated into CI before a human gets paged for review.</p>
+    <article class="work-card sketch-box feature">
+      <div class="work-meta"><span class="work-id">W.01</span><span class="work-dot" aria-hidden="true">●</span><span>Kubernetes</span></div>
+      <h3 class="work-title">A Helm catalogue for the whole stack</h3>
+      <p class="work-body">
+        Twenty-plus production Helm deployments, written and maintained as a reusable internal
+        catalogue: Odoo and ERPNext for business systems, Supabase and Zitadel for app platform
+        and identity, Airbyte and Spark for data, Longhorn for storage, Elasticsearch and the
+        kube-prometheus stack for search and observability, plus SonarQube, n8n, Appsmith,
+        Retool, Redis and GitLab Runner. One chart pattern, one values convention, so a new
+        service is a config change rather than a project.
+      </p>
       <div class="work-stats">
-        <div><span class="v">RAG</span><span class="k">retrieval</span></div>
-        <div><span class="v">Local LLM</span><span class="k">runtime</span></div>
-        <div><span class="v">CI</span><span class="k">native</span></div>
+        <div><span class="v">20+</span><span class="k">charts</span></div>
+        <div><span class="v">Helm</span><span class="k">+ ArgoCD</span></div>
+        <div><span class="v">AKS · k3s</span><span class="k">targets</span></div>
       </div>
     </article>
 
-    <article class="work-card">
-      <div class="work-meta">
-        <span class="work-id">A.002</span>
-      </div>
-      <h3 class="work-title">PM-Agent</h3>
-      <p class="work-body">AI-driven project management. Tracks tasks, surfaces blockers, and automates routine PM workflows — so the project manager can focus on actual decisions, not status pings.</p>
+    <article class="work-card sketch-box">
+      <div class="work-meta"><span class="work-id">W.02</span><span>Embedded</span></div>
+      <h3 class="work-title">Hardware-in-the-Loop rigs</h3>
+      <p class="work-body">
+        Embedded test automation on real hardware, wired into CI so firmware changes get the same
+        gate as application code. Reproducible fixtures, bare-metal runners, results that a
+        firmware engineer can read without a debugger attached.
+      </p>
       <div class="work-stats">
-        <div><span class="v">local LLM</span><span class="k">stack</span></div>
-        <div><span class="v">MCP</span><span class="k">protocol</span></div>
+        <div><span class="v">HiL</span><span class="k">bare metal</span></div>
+        <div><span class="v">CI</span><span class="k">gated</span></div>
       </div>
     </article>
 
-    <article class="work-card">
-      <div class="work-meta">
-        <span class="work-id">A.003</span>
-      </div>
-      <h3 class="work-title">TestFlow <span class="ital">Pro</span></h3>
-      <p class="work-body">End-to-end AI automation testing. Orchestrates whole test pipelines, generates and adapts test cases from intent, and ships results back into CI in a form humans can read.</p>
-      <div class="work-stats">
-        <div><span class="v">E2E</span><span class="k">automation</span></div>
-        <div><span class="v">AI-native</span><span class="k">test gen</span></div>
-      </div>
-    </article>
-
-    <article class="work-card">
-      <div class="work-meta">
-        <span class="work-id">A.004</span>
-      </div>
-      <h3 class="work-title">HiL Test <span class="ital">Infrastructure</span></h3>
-      <p class="work-body">Hardware-in-the-Loop embedded test automation — CI-integrated, reproducible, runs on bare metal. Built for the firmware team to stop fearing the merge button.</p>
-      <div class="work-stats">
-        <div><span class="v">HiL</span><span class="k">embedded</span></div>
-        <div><span class="v">CI</span><span class="k">integrated</span></div>
-      </div>
-    </article>
-
-    <article class="work-card">
-      <div class="work-meta">
-        <span class="work-id">A.005</span>
-      </div>
-      <h3 class="work-title">System <span class="ital">Design</span></h3>
-      <p class="work-body">End-to-end platform architecture — Kubernetes clusters for services, Proxmox VMs for legacy workloads, and one CI surface that ships to both. Trade-offs documented, runbooks per component.</p>
-      <div class="work-stats">
-        <div><span class="v">K8s</span><span class="k">+ VM</span></div>
-        <div><span class="v">CI/CD</span><span class="k">unified</span></div>
-      </div>
-    </article>
-
-    <article class="work-card">
-      <div class="work-meta">
-        <span class="work-id">A.006</span>
-      </div>
-      <h3 class="work-title">Microservices <span class="ital">→</span> Monolith</h3>
-      <p class="work-body">Consolidated a fragmented set of small services back into a deployable monolith. Cut deploy time by 60%, removed three layers of inter-service auth, dropped ops overhead — modular boundaries kept in code, not in network.</p>
+    <article class="work-card sketch-box">
+      <div class="work-meta"><span class="work-id">W.03</span><span>Architecture</span></div>
+      <h3 class="work-title">Microservices <span class="title-ital">→</span> monolith</h3>
+      <p class="work-body">
+        Consolidated a fragmented set of small services back into one deployable unit. Deploy time
+        down about 60%, three layers of inter-service auth deleted, ops surface shrunk — module
+        boundaries kept in the code rather than in the network.
+      </p>
       <div class="work-stats">
         <div><span class="v">−60%</span><span class="k">deploy time</span></div>
         <div><span class="v">3 svc</span><span class="k">merged</span></div>
       </div>
     </article>
 
-    <article class="work-card">
-      <div class="work-meta">
-        <span class="work-id">A.007</span>
-      </div>
-      <h3 class="work-title">IoT Build <span class="ital">Pipeline</span></h3>
-      <p class="work-body">GitLab + Jenkins CI/CD for IoT automation builds at ESAB India. AKS-hosted, multi-stage — firmware artifacts and software services in one reproducible flow.</p>
+    <article class="work-card sketch-box">
+      <div class="work-meta"><span class="work-id">W.04</span><span>Pipelines</span></div>
+      <h3 class="work-title">IoT &amp; firmware build pipeline</h3>
+      <p class="work-body">
+        Multi-stage GitLab and Jenkins CI on AKS producing firmware artefacts and software services
+        in one reproducible flow, with signed outputs and promotion between environments.
+      </p>
       <div class="work-stats">
-        <div><span class="v">AKS</span><span class="k">platform</span></div>
+        <div><span class="v">AKS</span><span class="k">runners</span></div>
         <div><span class="v">GitLab</span><span class="k">+ Jenkins</span></div>
       </div>
     </article>
 
-    <article class="work-card">
-      <div class="work-meta">
-        <span class="work-id">A.008</span>
+    <article class="work-card sketch-box">
+      <div class="work-meta"><span class="work-id">W.05</span><span>Platform</span></div>
+      <h3 class="work-title">Mixed estate: clusters and VMs</h3>
+      <p class="work-body">
+        Kubernetes for services, Proxmox VMs for the legacy workloads that were never going to
+        containerise, k3s for edge and constrained nodes — and a single CI surface that ships to
+        all three. Trade-offs written down, a runbook per component.
+      </p>
+      <div class="work-stats">
+        <div><span class="v">K8s + VM</span><span class="k">unified</span></div>
+        <div><span class="v">k3s</span><span class="k">edge</span></div>
       </div>
-      <h3 class="work-title">Monolith <span class="ital">→</span> Microservices</h3>
-      <p class="work-body">Cloud infrastructure architecture for a full monolith-to-microservices migration. CI/CD on GitLab + Jenkins, Python + Pytest automation frameworks for the new service surface.</p>
+    </article>
+
+    <article class="work-card sketch-box">
+      <div class="work-meta"><span class="work-id">W.06</span><span>Developer tooling</span></div>
+      <h3 class="work-title">Internal packaging &amp; release</h3>
+      <p class="work-body">
+        Private PyPI publishing pipeline and language-agnostic build templates, so internal
+        libraries get versioned, tested and released the same way every time instead of being
+        copied between repositories.
+      </p>
+      <div class="work-stats">
+        <div><span class="v">PyPI</span><span class="k">private</span></div>
+        <div><span class="v">templates</span><span class="k">reusable CI</span></div>
+      </div>
+    </article>
+
+    <article class="work-card sketch-box">
+      <div class="work-meta"><span class="work-id">W.07</span><span>Architecture</span></div>
+      <h3 class="work-title">Monolith <span class="title-ital">→</span> microservices</h3>
+      <p class="work-body">
+        The migration in the other direction, for a platform that genuinely needed it: API gateway,
+        Node service backends and an async messaging tier, with cloud infrastructure, CI/CD and
+        Pytest coverage designed alongside the split rather than bolted on after.
+      </p>
       <div class="work-stats">
         <div><span class="v">on-prem</span><span class="k">→ cloud</span></div>
         <div><span class="v">Python</span><span class="k">automation</span></div>
+      </div>
+    </article>
+
+    <article class="work-card sketch-box span2">
+      <div class="work-meta"><span class="work-id">W.08</span><span>Observability</span></div>
+      <h3 class="work-title">One pane for clusters and agents</h3>
+      <p class="work-body">
+        Prometheus, Grafana and Loki across the estate, with the AI agents emitting to the same
+        boards — token spend and agent failure rate sit next to node pressure and pod restarts,
+        because in practice they page the same person.
+      </p>
+      <div class="work-stats">
+        <div><span class="v">Prom</span><span class="k">+ Grafana</span></div>
+        <div><span class="v">Loki</span><span class="k">logs</span></div>
       </div>
     </article>
 
@@ -352,133 +843,206 @@
 
 <!-- ============== STACK ============== -->
 <section class="section" id="stack">
+  <div class="paper-edge" aria-hidden="true">
+    <svg viewBox="0 0 1200 9" preserveAspectRatio="none"><path d="M0 5 C 55 2, 115 8, 175 5 S 265 2, 340 6 S 430 3, 495 7 S 590 4, 660 2 S 760 6, 830 4 S 940 8, 1010 5 S 1130 2, 1200 5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>
+  </div>
+
   <div class="section-head">
-    <div class="section-marker">§ 04</div>
-    <h2 class="section-title">Stack &amp; Tooling<span class="caret">.</span></h2>
-    <div class="section-sub" style="max-width: 550px">Filled circles indicate depth.</div>
+    <div class="section-marker"><span class="marker-num">05</span><span class="marker-rule" aria-hidden="true"></span></div>
+    <div>
+      <h2 class="section-title">Stack<span class="caret">.</span></h2>
+      <p class="section-sub">Length of the pencil line is depth, roughly. Honest rather than flattering.</p>
+    </div>
+
+    <div class="section-art" aria-hidden="true">
+      <svg viewBox="0 0 148 56" width="134" height="51">
+        <g filter="url(#rough-fine)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <!-- pencil -->
+          <path d="M34 8 H124 V30 H34 Z"/>
+          <path d="M34 8 L10 19 L34 30"/>
+          <path d="M22 13.5 L10 19 L22 24.5"/>
+          <path d="M108 8 V30" opacity=".7"/>
+          <path d="M114 8 V30" opacity=".7"/>
+          <path d="M124 8 H140 V30 H124 Z"/>
+          <!-- the line it just drew -->
+          <path d="M6 46 C 46 41, 96 51, 142 44" stroke-width="1.7" opacity=".6"/>
+        </g>
+      </svg>
+    </div>
   </div>
 
   <div class="stack-grid">
+
     <div class="stack-col">
-      <div class="stack-label">Containers &amp; Orchestration</div>
+      <div class="stack-label">AI &amp; agents</div>
       <ul class="stack-list">
-        <li><span class="dots" data-level="5"></span>Kubernetes</li>
-        <li><span class="dots" data-level="5"></span>AKS</li>
-        <li><span class="dots" data-level="4"></span>Docker</li>
-        <li><span class="dots" data-level="4"></span>Proxmox (VM)</li>
+        <li><span class="dots" data-level="5" aria-hidden="true"></span>Agent design</li>
+        <li><span class="dots" data-level="5" aria-hidden="true"></span>MCP servers</li>
+        <li><span class="dots" data-level="4" aria-hidden="true"></span>RAG pipelines</li>
+        <li><span class="dots" data-level="4" aria-hidden="true"></span>Local LLM (Ollama)</li>
+        <li><span class="dots" data-level="4" aria-hidden="true"></span>Tool calling</li>
+        <li><span class="dots" data-level="3" aria-hidden="true"></span>SLMs · fine-tuning</li>
       </ul>
     </div>
 
     <div class="stack-col">
-      <div class="stack-label">IaC &amp; Configuration</div>
+      <div class="stack-label">Containers &amp; orchestration</div>
       <ul class="stack-list">
-        <li><span class="dots" data-level="5"></span>Terraform</li>
-        <li><span class="dots" data-level="5"></span>Ansible</li>
-        <li><span class="dots" data-level="4"></span>Helm</li>
-        <li><span class="dots" data-level="4"></span>ArgoCD</li>
+        <li><span class="dots" data-level="5" aria-hidden="true"></span>Kubernetes</li>
+        <li><span class="dots" data-level="5" aria-hidden="true"></span>AKS</li>
+        <li><span class="dots" data-level="5" aria-hidden="true"></span>Helm</li>
+        <li><span class="dots" data-level="4" aria-hidden="true"></span>Docker</li>
+        <li><span class="dots" data-level="4" aria-hidden="true"></span>k3s</li>
+        <li><span class="dots" data-level="4" aria-hidden="true"></span>Proxmox</li>
       </ul>
     </div>
 
     <div class="stack-col">
-      <div class="stack-label">CI/CD &amp; Build</div>
+      <div class="stack-label">IaC &amp; delivery</div>
       <ul class="stack-list">
-        <li><span class="dots" data-level="5"></span>GitLab CI</li>
-        <li><span class="dots" data-level="5"></span>Jenkins</li>
-        <li><span class="dots" data-level="4"></span>GitHub Actions</li>
-        <li><span class="dots" data-level="3"></span>Buildkite</li>
+        <li><span class="dots" data-level="5" aria-hidden="true"></span>Terraform</li>
+        <li><span class="dots" data-level="5" aria-hidden="true"></span>Ansible</li>
+        <li><span class="dots" data-level="5" aria-hidden="true"></span>GitLab CI</li>
+        <li><span class="dots" data-level="5" aria-hidden="true"></span>Jenkins</li>
+        <li><span class="dots" data-level="4" aria-hidden="true"></span>ArgoCD</li>
+        <li><span class="dots" data-level="4" aria-hidden="true"></span>GitHub Actions</li>
       </ul>
     </div>
 
     <div class="stack-col">
-      <div class="stack-label">Clouds &amp; Infra</div>
+      <div class="stack-label">Cloud &amp; infrastructure</div>
       <ul class="stack-list">
-        <li><span class="dots" data-level="5"></span>Azure</li>
-        <li><span class="dots" data-level="4"></span>AWS</li>
-        <li><span class="dots" data-level="3"></span>GCP</li>
-        <li><span class="dots" data-level="4"></span>Proxmox</li>
-        <li><span class="dots" data-level="3"></span>On-Prem (OpenStack)</li>
+        <li><span class="dots" data-level="5" aria-hidden="true"></span>Azure</li>
+        <li><span class="dots" data-level="4" aria-hidden="true"></span>AWS</li>
+        <li><span class="dots" data-level="3" aria-hidden="true"></span>GCP</li>
+        <li><span class="dots" data-level="4" aria-hidden="true"></span>On-prem estates</li>
+        <li><span class="dots" data-level="4" aria-hidden="true"></span>Linux</li>
       </ul>
     </div>
 
     <div class="stack-col">
       <div class="stack-label">Languages</div>
       <ul class="stack-list">
-        <li><span class="dots" data-level="5"></span>Python</li>
-        <li><span class="dots" data-level="5"></span>Bash</li>
-        <li><span class="dots" data-level="3"></span>Go</li>
-        <li><span class="dots" data-level="3"></span>JavaScript</li>
-      </ul>
-    </div>
-
-    <div class="stack-col">
-      <div class="stack-label">AI &amp; Automation</div>
-      <ul class="stack-list">
-        <li><span class="dots" data-level="4"></span>Local LLM (Ollama)</li>
-        <li><span class="dots" data-level="4"></span>AI Agents</li>
-        <li><span class="dots" data-level="4"></span>RAG Pipelines</li>
-        <li><span class="dots" data-level="3"></span>SLMs</li>
-        <li><span class="dots" data-level="4"></span>MCP Servers</li>
+        <li><span class="dots" data-level="5" aria-hidden="true"></span>Python</li>
+        <li><span class="dots" data-level="5" aria-hidden="true"></span>Bash</li>
+        <li><span class="dots" data-level="3" aria-hidden="true"></span>Go</li>
+        <li><span class="dots" data-level="3" aria-hidden="true"></span>JavaScript</li>
+        <li><span class="dots" data-level="4" aria-hidden="true"></span>YAML (regrettably)</li>
       </ul>
     </div>
 
     <div class="stack-col">
       <div class="stack-label">Observability</div>
       <ul class="stack-list">
-        <li><span class="dots" data-level="4"></span>Prometheus</li>
-        <li><span class="dots" data-level="4"></span>Grafana</li>
-        <li><span class="dots" data-level="3"></span>Loki</li>
-        <li><span class="dots" data-level="3"></span>ELK</li>
+        <li><span class="dots" data-level="4" aria-hidden="true"></span>Prometheus</li>
+        <li><span class="dots" data-level="4" aria-hidden="true"></span>Grafana</li>
+        <li><span class="dots" data-level="3" aria-hidden="true"></span>Loki</li>
+        <li><span class="dots" data-level="3" aria-hidden="true"></span>Elastic (ECK)</li>
       </ul>
     </div>
 
     <div class="stack-col">
-      <div class="stack-label">Embedded &amp; Hardware</div>
+      <div class="stack-label">Testing</div>
       <ul class="stack-list">
-        <li><span class="dots" data-level="4"></span>HiL Setups</li>
-        <li><span class="dots" data-level="3"></span>Firmware CI</li>
-        <li><span class="dots" data-level="3"></span>IoT Pipelines</li>
+        <li><span class="dots" data-level="5" aria-hidden="true"></span>Pytest</li>
+        <li><span class="dots" data-level="4" aria-hidden="true"></span>Playwright</li>
+        <li><span class="dots" data-level="4" aria-hidden="true"></span>TestRail</li>
+        <li><span class="dots" data-level="4" aria-hidden="true"></span>HiL rigs</li>
       </ul>
     </div>
+
+    <div class="stack-col">
+      <div class="stack-label">Embedded &amp; hardware</div>
+      <ul class="stack-list">
+        <li><span class="dots" data-level="4" aria-hidden="true"></span>HiL setups</li>
+        <li><span class="dots" data-level="3" aria-hidden="true"></span>Firmware CI</li>
+        <li><span class="dots" data-level="3" aria-hidden="true"></span>IoT pipelines</li>
+        <li><span class="dots" data-level="3" aria-hidden="true"></span>PLC integration</li>
+      </ul>
+    </div>
+
   </div>
 </section>
 
 <!-- ============== CONTACT ============== -->
 <section class="section section-contact" id="contact">
+  <div class="paper-edge" aria-hidden="true">
+    <svg viewBox="0 0 1200 9" preserveAspectRatio="none"><path d="M0 4 C 65 7, 130 2, 200 5 S 290 8, 360 4 S 455 2, 525 6 S 620 8, 695 3 S 795 6, 865 4 S 975 2, 1045 7 S 1150 4, 1200 6" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>
+  </div>
+
   <div class="section-head">
-    <div class="section-marker">§ 05</div>
-    <h2 class="section-title">Contact<span class="caret">.</span></h2>
-    <div class="section-sub" style="max-width: 550px">Open to senior DevOps, platform, and infrastructure roles — full-time or contract. Happy to talk through AI-agent and embedded-automation work in detail.</div>
+    <div class="section-marker"><span class="marker-num">06</span><span class="marker-rule" aria-hidden="true"></span></div>
+    <div>
+      <h2 class="section-title">Contact<span class="caret">.</span></h2>
+      <p class="section-sub">
+        Open to senior DevOps, platform and AI-infrastructure roles — full-time or contract.
+        Happy to go deep on the agent work.
+      </p>
+    </div>
+
+    <div class="section-art" aria-hidden="true">
+      <svg viewBox="0 0 132 92" width="120" height="84">
+        <g filter="url(#rough-fine)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <!-- paper plane -->
+          <path d="M8 40 L124 6 L78 86 L58 50 Z"/>
+          <path d="M8 40 L58 50 L124 6"/>
+          <path d="M58 50 L52 74"/>
+          <!-- motion -->
+          <path d="M4 62 H24" stroke-width="1.5" opacity=".55"/>
+          <path d="M2 74 H16" stroke-width="1.5" opacity=".4"/>
+        </g>
+      </svg>
+    </div>
   </div>
 
   <a class="big-email" href="mailto:karthikpalani1710@gmail.com">
-    karthikpalani1710<span class="at">@</span>gmail.com
-    <span class="email-arrow">↗</span>
+    <span class="email-text">karthikpalani1710<span class="at">@</span>gmail.com</span>
+    <svg class="email-scribble" viewBox="0 0 600 16" preserveAspectRatio="none" aria-hidden="true">
+      <g filter="url(#rough)" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
+        <path d="M6 9 C 140 3, 300 14, 460 6 S 580 8, 594 10"/>
+      </g>
+    </svg>
   </a>
 
   <div class="contact-grid">
-    <a class="contact-card" href="https://karthikpalani.com">
-      <span class="cc-label">Website</span>
-      <span class="cc-value">karthikpalani.com</span>
-      <span class="cc-arrow">↗</span>
-    </a>
-    <a class="contact-card" href="https://www.linkedin.com/in/karthik-palani/" target="_blank" rel="noopener">
+    <a class="contact-card sketch-box" href="https://www.linkedin.com/in/karthik-palani/" target="_blank" rel="noopener">
       <span class="cc-label">LinkedIn</span>
       <span class="cc-value">in/karthik-palani</span>
-      <span class="cc-arrow">↗</span>
+      <span class="cc-arrow" aria-hidden="true">↗</span>
     </a>
-    <a class="contact-card" href="https://github.com/karthik1710" target="_blank" rel="noopener">
+    <a class="contact-card sketch-box" href="https://github.com/karthik1710" target="_blank" rel="noopener">
       <span class="cc-label">GitHub</span>
-      <span class="cc-value">github.com/karthik1710</span>
-      <span class="cc-arrow">↗</span>
+      <span class="cc-value">karthik1710</span>
+      <span class="cc-arrow" aria-hidden="true">↗</span>
     </a>
-    <a class="contact-card" href="mailto:karthikpalani1710@gmail.com">
-      <span class="cc-label">Direct</span>
-      <span class="cc-value">karthikpalani1710@gmail.com</span>
-      <span class="cc-arrow">↗</span>
+    <a class="contact-card sketch-box" href="https://gitlab.com/karthikpalani" target="_blank" rel="noopener">
+      <span class="cc-label">GitLab</span>
+      <span class="cc-value">karthikpalani</span>
+      <span class="cc-arrow" aria-hidden="true">↗</span>
+    </a>
+    <a class="contact-card sketch-box" href="mailto:karthikpalani1710@gmail.com">
+      <span class="cc-label">Email</span>
+      <span class="cc-value">Say hello</span>
+      <span class="cc-arrow" aria-hidden="true">↗</span>
     </a>
   </div>
 </section>
 
-<script src="portfolio.js"></script>
+<!-- ============== FOOTER ============== -->
+<footer class="footer">
+  <div class="colophon">
+    <strong>Colophon.</strong> Hand-built static HTML, CSS and about ninety lines of JavaScript —
+    no framework, no build step, no tracking. The hand-drawn edges are an SVG turbulence filter
+    displacing every border, not images. Set in Bricolage Grotesque, Geist, Caveat and
+    JetBrains Mono. Served from a 12&nbsp;MB nginx container.
+  </div>
+  <div class="footer-right">
+    <span class="footer-sig">Karthik Palani</span>
+    <span>Chennai, India · <span id="footYear">2026</span></span>
+    <a href="#top">back to top ↑</a>
+  </div>
+</footer>
+
+<script src="portfolio.js?v=7"></script>
 </body>
 </html>

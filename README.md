@@ -1,83 +1,66 @@
 # Karthik Palani — Portfolio
 
-Personal portfolio site for Karthik Palani, Senior DevOps Engineer & Platform Lead.
+My personal site. Static HTML, CSS and a little JavaScript — no framework, no build step.
 
-**Live:** static HTML/CSS/JS — no build step, no dependencies.
+**About me:** I'm a Senior DevOps Engineer in Chennai, India. I've spent about nine years
+on the infrastructure layer — Kubernetes, CI/CD pipelines, cloud architecture, SRE and
+embedded test rigs — and these days I mostly build AI agents that run on top of it:
+autonomous code review, AI-executed test suites, and project automation.
+
+Currently leading a full-stack and DevOps team at ESAB India.
+
+- **Site:** [karthikpalani.com](https://karthikpalani.com)
+- **Email:** karthikpalani1710@gmail.com
+- **LinkedIn:** [in/karthik-palani](https://www.linkedin.com/in/karthik-palani/)
+- **GitHub:** [karthik1710](https://github.com/karthik1710) · **GitLab:** [karthikpalani](https://gitlab.com/karthikpalani)
 
 ---
 
-## Run locally
-
-### Static (no Docker)
-
-Open `index.html` directly in a browser, or serve with any static file server:
+## Run it
 
 ```bash
-npx serve .
-# or
 python3 -m http.server 8080
 ```
 
+Then open <http://localhost:8080>. Opening `index.html` directly in a browser works too.
+
 ### Docker
-
-**Build:**
-
-```bash
-docker build -t kp-portfolio .
-```
-
-**Run:**
-
-```bash
-docker run -p 8080:80 kp-portfolio
-```
-
-Open [http://localhost:8080](http://localhost:8080).
-
-**One-liner:**
-
-```bash
-docker build -t kp-portfolio . && docker run --rm -p 8080:80 kp-portfolio
-```
-
-### Docker Compose
 
 ```bash
 docker compose up --build
 ```
 
-Open [http://localhost:8080](http://localhost:8080). Stop with `Ctrl+C` or `docker compose down`.
+Or without Compose:
 
----
-
-## Project structure
-
-```
-portfolio/
-├── index.html        # Single-page markup
-├── portfolio.css     # All styles (light + dark theme)
-├── portfolio.js      # Theme toggle, IST clock, scroll progress
-├── uploads/          # Project images
-├── Dockerfile        # nginx:1.27-alpine3.21 container
-└── nginx.conf        # Gzip, caching, security headers
+```bash
+docker build -t kp-portfolio . && docker run --rm -p 8080:80 kp-portfolio
 ```
 
 ---
 
-## Features
+## Files
 
-- Light / dark theme with localStorage persistence
-- Live IST clock in the nav bar
-- Scroll progress indicator
-- Responsive layout
-- Google Fonts: Bricolage Grotesque, Geist, JetBrains Mono, Newsreader
+```
+index.html      markup — one page, six sections
+portfolio.css   all styles, light + dark
+portfolio.js    theme toggle, clock, scroll progress, active nav, reveal
+assets/         drop avatar.jpg here to replace the drawn portrait
+Dockerfile      nginx:alpine, ~12 MB
+nginx.conf      gzip, cache headers, security headers
+```
 
----
+## Adding your photo
 
-## Docker image details
+Save a square head-and-shoulders photo (600×600 or larger) as `assets/avatar.jpg`.
+The page picks it up automatically and applies a pencil filter so it matches the
+rest of the drawings. Without it, the hand-drawn SVG portrait stays.
 
-Base: `nginx:1.27-alpine3.21` (~12 MB). Serves static files with:
+## Notes on the design
 
-- Gzip compression for CSS/JS/SVG
-- 30-day cache headers for static assets
-- `X-Frame-Options` and `X-Content-Type-Options` security headers
+The theme is ink and pencil on canvas. The hand-drawn borders aren't images — every
+frame is a normal CSS border on a pseudo-element, pushed through an SVG turbulence
+filter (`#rough` in `index.html`) so straight lines wobble. Text is never filtered,
+so it stays crisp and selectable.
+
+Type is Bricolage Grotesque, Geist, Caveat and JetBrains Mono, loaded from Google Fonts.
+Everything respects `prefers-reduced-motion` and the site works with JavaScript disabled.

@@ -1,76 +1,131 @@
-// Karthik Palani — Portfolio v2
-// Small interactivity script: theme toggle, IST clock, scroll progress
+// Karthik Palani — Portfolio v3
+// Theme toggle, IST clock, scroll progress, active nav, scroll reveal,
+// and the avatar photo/drawing swap.
 
 (function () {
+  "use strict";
+
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   // --- Theme toggle (persisted) ---
-  const btn = document.getElementById("themeToggle");
-  function setTheme(t) {
-    document.documentElement.setAttribute("data-theme", t);
-    localStorage.setItem("kp2-theme", t);
+  var btn = document.getElementById("themeToggle");
+  if (btn) {
+    btn.addEventListener("click", function () {
+      var cur = document.documentElement.getAttribute("data-theme") || "light";
+      var next = cur === "light" ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", next);
+      localStorage.setItem("kp3-theme", next);
+    });
   }
-  btn && btn.addEventListener("click", () => {
-    const cur = document.documentElement.getAttribute("data-theme") || "light";
-    setTheme(cur === "light" ? "dark" : "light");
-  });
 
   // --- Live IST clock ---
-  const clockEl = document.getElementById("clock");
+  var clockEl = document.getElementById("clock");
   function tick() {
     if (!clockEl) return;
-    const now = new Date();
-    const utc = now.getTime() + now.getTimezoneOffset() * 60000;
-    const ist = new Date(utc + 5.5 * 3600000);
-    const h = String(ist.getHours()).padStart(2, "0");
-    const m = String(ist.getMinutes()).padStart(2, "0");
-    clockEl.textContent = `${h}:${m} · IST`;
+    var now = new Date();
+    var ist = new Date(now.getTime() + now.getTimezoneOffset() * 60000 + 5.5 * 3600000);
+    clockEl.textContent =
+      String(ist.getHours()).padStart(2, "0") + ":" +
+      String(ist.getMinutes()).padStart(2, "0") + " IST";
   }
   tick();
-  setInterval(tick, 30 * 1000);
+  setInterval(tick, 30000);
 
-  // --- Date stamp ---
-  const dateEl = document.getElementById("dateStamp");
-  if (dateEl) {
-    const now = new Date();
-    const months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
-    dateEl.textContent = `${months[now.getMonth()]} ${now.getFullYear()}`;
-  }
+  // --- Date stamp + footer year ---
+  var MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  var today = new Date();
+  var dateEl = document.getElementById("dateStamp");
+  if (dateEl) dateEl.textContent = MONTHS[today.getMonth()] + " " + today.getFullYear();
+  var yearEl = document.getElementById("footYear");
+  if (yearEl) yearEl.textContent = today.getFullYear();
 
-  // --- Dynamic years of experience (start: July 2017) ---
+  // --- Years of experience, counted from July 2017 ---
   (function () {
-    const NUMBER_WORDS = [
-      "", "one", "two", "three", "four", "five", "six", "seven", "eight",
-      "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen",
-      "sixteen", "seventeen", "eighteen", "nineteen", "twenty"
-    ];
-    const START = new Date(2017, 6, 1); // July 2017
-    const now = new Date();
-    const totalMonths =
-      (now.getFullYear() - START.getFullYear()) * 12 +
-      (now.getMonth() - START.getMonth());
-    const decimalYears = (totalMonths / 12).toFixed(1);
-    const wholeYears = Math.floor(totalMonths / 12);
-    const wordLower = NUMBER_WORDS[wholeYears] || String(wholeYears);
-    const wordCapital = wordLower.charAt(0).toUpperCase() + wordLower.slice(1);
+    var WORDS = ["", "one","two","three","four","five","six","seven","eight","nine","ten",
+                 "eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen",
+                 "eighteen","nineteen","twenty"];
+    var start = new Date(2017, 6, 1);
+    var now = new Date();
+    var months = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
+    var whole = Math.floor(months / 12);
+    var word = WORDS[whole] || String(whole);
 
-    const metaEl = document.getElementById("metaYears");
-    if (metaEl) metaEl.textContent = decimalYears + " years";
+    var meta = document.getElementById("metaYears");
+    if (meta) meta.textContent = (months / 12).toFixed(1) + " years";
 
-    const heroEl = document.getElementById("heroYearsWord");
-    if (heroEl) heroEl.textContent = wordCapital;
+    var hero = document.getElementById("heroYearsWord");
+    if (hero) hero.textContent = word.charAt(0).toUpperCase() + word.slice(1);
 
-    const expEl = document.getElementById("expSubYearsWord");
-    if (expEl) expEl.textContent = wordLower;
+    var exp = document.getElementById("expSubYearsWord");
+    if (exp) exp.textContent = word;
+
+    var note = document.getElementById("noteYears");
+    if (note) note.textContent = String(whole);
+  })();
+
+  // --- Avatar: use the real photo if assets/avatar.jpg exists, else keep the ink drawing ---
+  (function () {
+    var photo = document.getElementById("avatarPhoto");
+    var ink = document.getElementById("avatarInk");
+    if (!photo || !ink) return;
+    photo.addEventListener("load", function () {
+      if (photo.naturalWidth > 0) {
+        photo.hidden = false;
+        ink.style.display = "none";
+      }
+    });
+    // no handler needed on error — the drawing is already what's showing
   })();
 
   // --- Scroll progress ---
-  const prog = document.getElementById("scrollProgress");
+  var prog = document.getElementById("scrollProgress");
   function onScroll() {
     if (!prog) return;
-    const h = document.documentElement;
-    const max = h.scrollHeight - h.clientHeight;
-    const pct = max > 0 ? (h.scrollTop / max) * 100 : 0;
-    prog.style.width = pct + "%";
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    prog.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + "%";
   }
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
+
+  // --- Active nav link ---
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll(".topnav a[data-nav]"));
+  var sections = navLinks
+    .map(function (a) { return document.getElementById(a.dataset.nav); })
+    .filter(Boolean);
+
+  if (sections.length && "IntersectionObserver" in window) {
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        navLinks.forEach(function (a) {
+          a.classList.toggle("is-active", a.dataset.nav === e.target.id);
+        });
+      });
+    }, { rootMargin: "-45% 0px -50% 0px", threshold: 0 });
+    sections.forEach(function (s) { spy.observe(s); });
+  }
+
+  // --- Scroll reveal ---
+  var targets = document.querySelectorAll(
+    ".now-card, .ai-entry, .exp-row, .work-card, .stack-col, .contact-card, .big-email"
+  );
+  if (reduceMotion || !("IntersectionObserver" in window)) {
+    targets.forEach(function (el) { el.classList.add("is-in"); });
+  } else {
+    targets.forEach(function (el) { el.classList.add("reveal"); });
+    var reveal = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add("is-in");
+        obs.unobserve(e.target);
+      });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+    targets.forEach(function (el) { reveal.observe(el); });
+
+    // Failsafe: never leave content invisible because an observer didn't fire.
+    setTimeout(function () {
+      targets.forEach(function (el) { el.classList.add("is-in"); });
+    }, 2500);
+  }
 })();

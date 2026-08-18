@@ -3,6 +3,7 @@ FROM nginx:1.27-alpine3.21
 COPY index.html /usr/share/nginx/html/
 COPY portfolio.css /usr/share/nginx/html/
 COPY portfolio.js /usr/share/nginx/html/
+COPY favicon.svg favicon-32.png apple-touch-icon.png /usr/share/nginx/html/
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 

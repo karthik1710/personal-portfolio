@@ -46,6 +46,8 @@ docker build -t kp-portfolio . && docker run --rm -p 8080:80 kp-portfolio
 index.html      markup — one page, seven sections
 portfolio.css   all styles, light + dark
 portfolio.js    theme toggle, clock, scroll progress, active nav, reveal
+favicon.svg     KP monogram; favicon-32.png and apple-touch-icon.png are
+                rasterised from it for browsers without SVG icon support
 Dockerfile      nginx:alpine, ~12 MB
 nginx.conf      gzip, cache headers, security headers
 ```

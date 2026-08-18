@@ -1,6 +1,5 @@
 // Karthik Palani — Portfolio v3
-// Theme toggle, IST clock, scroll progress, active nav, scroll reveal,
-// and the avatar photo/drawing swap.
+// Theme toggle, IST clock, scroll progress, active nav, scroll reveal.
 
 (function () {
   "use strict";
@@ -63,20 +62,6 @@
     if (note) note.textContent = String(whole);
   })();
 
-  // --- Avatar: use the real photo if assets/avatar.jpg exists, else keep the ink drawing ---
-  (function () {
-    var photo = document.getElementById("avatarPhoto");
-    var ink = document.getElementById("avatarInk");
-    if (!photo || !ink) return;
-    photo.addEventListener("load", function () {
-      if (photo.naturalWidth > 0) {
-        photo.hidden = false;
-        ink.style.display = "none";
-      }
-    });
-    // no handler needed on error — the drawing is already what's showing
-  })();
-
   // --- Scroll progress ---
   var prog = document.getElementById("scrollProgress");
   function onScroll() {
@@ -108,7 +93,7 @@
 
   // --- Scroll reveal ---
   var targets = document.querySelectorAll(
-    ".now-card, .ai-entry, .exp-row, .work-card, .stack-col, .contact-card, .big-email"
+    ".now-card, .ai-entry, .arch-diagram, .arch-card, .exp-row, .work-card, .stack-col, .contact-card, .big-email"
   );
   if (reduceMotion || !("IntersectionObserver" in window)) {
     targets.forEach(function (el) { el.classList.add("is-in"); });

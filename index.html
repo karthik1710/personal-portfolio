@@ -23,8 +23,9 @@
 
 <script>
   (function(){
-    var t = localStorage.getItem("kp3-theme");
-    if (!t) t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    // Light is the default. A visitor's system preference is ignored on a
+    // first visit; only an explicit toggle is remembered.
+    var t = localStorage.getItem("kp3-theme") || "light";
     document.documentElement.setAttribute("data-theme", t);
   })();
 </script>
